@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="index.css">
 
     <link rel="manifest" href="manifest.webmanifest">
-    <script src="script.js" type="text/javascript"></script>
+    <script src="mvp.js" type="text/javascript"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="mobile-web-app-capable" content="yes"/>
@@ -43,18 +43,18 @@
             </ul>
             <label for="tfAufgabe">Aufgabe:</label>
             <input id="tfAufgabe">
-            <form>
-                Antwort:
-                <button class="answer" type="button" id="A">A</button>
-                <button class="answer" type="button" id="B">B</button>
-                <button class="answer" type="button" id="C">C</button>
-                <button class="answer" type="button" id="D">D</button>
-            </form>
-            <div class="progress-container">
+            <div id="boo"></div>
+            <div id="answers">
+              <button class="answer">A</button>
+              <button class="answer">B</button>
+              <button class="answer">C</button>
+              <button class="answer">D</button>
+            </div>
+            <!--button id="start">Start</button!-->
+            <div class="progress-wrapper">
               <div class="progress-bar" id="progressBar"></div>
             </div>
             <p id="progressText">0 / 0 beantwortet</p>
-            
 
             <p id="ergebnis"></p>
             <br>
