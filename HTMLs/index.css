@@ -1,0 +1,60 @@
+nav ul {
+    list-style-type: none;
+    }
+nav ul li {display: inline}
+nav ul li a:hover{background-color: #111;}
+nav ul li a:link{text-decoration: none;}
+
+body {background-color: aliceblue}
+
+
+.mybutton {background-color: green;}
+
+
+div p::first-line{font-size: large;color: brown}
+
+body {display: def;
+    gap: 0.5em;
+}
+
+header {background-image: url("Dino.jpg");
+        }
+main { background-color: grey; 
+}
+
+div {text-align: middle ;order: 2;flex:5em}
+
+article {background-color: rgb(208, 102, 109);order: 1;flex: 15em}
+
+
+.container {
+    grid-template-areas: 
+    "article" 
+    "div";
+    vertical-align: middle;
+}
+@media all and(min-width: 40em){
+    
+    main{
+        display:flex;
+        flex-direction: column;
+        grid-column: span;
+        vertical-align: middle;
+    } 
+    /* Änderung der Reihenfolge für Kinder in Folge lt. html */
+    main > * {
+        order: 0;
+    }
+}
+header,main,div,article{
+    margin: 0.25em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+}
+/*
+header,footer {
+    grid-column: 1 / -1;
+}*/
+
+/*hyphens: auto;

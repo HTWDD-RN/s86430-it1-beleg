@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <title>Lernprogramm</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <header>
+      <h1>Das beste Lernprogramm der Welt</h1>
+    </header>
+    <main class="container">
+        <article>
+            <h1>Das allerbeste Lernprogramm zum lernen</h1>
+            <p>
+                Das ist ein Lernprogramm zum lernen von 
+                <ul>
+                    <li>Internet-/Webtechnologien</li>
+                    <li>Mathematik</li>
+                    <li>Musik-Noten</li>
+                </ul>
+                Bitte die gewünschte Kategorie anklicken zum Erhalten von zufällig gewählten Fragen. Anschließend die entsprechnde Antwort anklicken.
+                Anschließend wird die richtige Antwort gezeigt. Danach auf weiter drücken für die nächste Frage oder Abbruch zum Abbrechen.
+            </p>
+        </article> 
+        <div>
+            <h2>Kategorie:</h2>
+            <ul>
+                <li><button class="category" type="button" id="it">Internet-/Webtechnologien</button></li>
+                <li><button class="category" id="mathe">Mathematik</button></li>
+                <li><button class="category" id="noten">Musik-Noten</button></li>
+            </ul>
+            <label for="tfAufgabe">Aufgabe:</label>
+            <input id="tfAufgabe">
+            <form>
+                Antwort:
+                <button class="answer" type="button" id="A">A</button>
+                <button class="answer" type="button" id="B">B</button>
+                <button class="answer" type="button" d="C">C</button>
+                <button class="answer" type="button" id="D">D</button>
+                <script src="script.js"></script>
+            </form>
+            <p id="ergebnis"></p>
+            <br>
+            wie weiter?
+            <form>
+                <button class="opt" type="button" id="next">Nächste Frage</button>
+                <button class="opt" type="button" id="cancel">Abbruch</button>
+            </form>
+        </div>
+    </main>
+  </body>
+</html>
