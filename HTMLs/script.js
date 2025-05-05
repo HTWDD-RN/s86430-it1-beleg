@@ -1,23 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
 
     const butIt = document.getElementById('it');
-    const butAntw = document.querySelectorAll('.answer');
+    const butAnsw = document.querySelectorAll('.answer');
     const butNext = document.getElementById('next');
     const butCancel = document.getElementById('cancel');
-    const tfAufg = document.getElementById('tfAufgabe');
+    const tfAufgabe = document.getElementById('tfAufgabe');
     const tfErg = document.getElementById('ergebnis');
 
-    const quizData = {
+    tfAufgabe.value = "";
+
+    let quizData = {
         it: [
             {
                 frage: "Was bedeutet HTML?",
-                antworten: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyper Tool Multi Language"],
-                korrekt: "HyperText Markup Language"
+                answers: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyper Tool Multi Language"],
             },
             {
                 frage: "Was macht CSS?",
-                antworten: ["Struktur", "Farbe und Layout", "Programmiert Logik", "Verwaltet Datenbanken"],
-                korrekt: "Farbe und Layout"
+                answers: ["Farbe und Layout", "Struktur", "Programmiert Logik", "Verwaltet Datenbanken"],
             }
         ]
         // weitere Kategorien später möglich
@@ -27,57 +29,86 @@ document.addEventListener('DOMContentLoaded', function () {
     let question = "Was nimmt man für Websites?"
     let answers = ["HTML","Python","C","Pascal"];
     let Erg = answers[0];
+    let currentQuestionIndex = 0;
 
     let questions = [];
     let questionCnt = 0;
     let corrAnswers = 0;
     
+    function getXhr() { // API für asynchrone Aufrufe
+        if (window.XMLHttpRequest) {
+          var xhr = new XMLHttpRequest();
+          return xhr;
+        } 
+        else return false;
+    }
+    function sendXhr() {
+        xhr.onreadystatechange = xhrHandler;
+        xhr.open('GET','https://idefix.informatik.htw-dresden.de:8888/api/quizzes');
+        xhr.send(null);
+        console.debug("Request send");
+    }
+    function xhrHandler() {
+        console.log( "Status: " + xhr.readyState );
+        if (xhr.readyState != 4) { return; }
+        console.log( "Status: " + xhr.readyState + " " + xhr.status);
+        if (xhr.status == 200) {
+        tfAufgabe.innerHTML = xhr.responseText;
+           } 
+       }
+
     function ladeFrage() {
-        const frageObjekt = questions[currentQuestionIndex];
+        const frageObjekt = quizData.it[questionCnt];
         tfAufgabe.value = frageObjekt.frage;
         tfErg.textContent = "";
-        questionCnt++;
-        answerButtons.forEach((btn, i) => {
-            btn.textContent = frageObjekt.antworten[i];
+        Erg = quizData.it[questionCnt].answers[0];
+
+        // Antworten kopieren und mischen (Funktion mithilfe von ChatGBT)
+        const mixedAnswers = [...frageObjekt.answers].sort(() => Math.random() - 0.5);
+
+        butAnsw.forEach((btn, i) => {
+            btn.textContent = mixedAnswers[i];
             btn.disabled = false;
         });
-    }
-
-    function bewerteAntwort(antwort) {
-        const korrekt = questions[currentQuestionIndex].korrekt;
-        if (antwort === korrekt) {
-            tfErg.textContent = "✅ Richtig!";
-            tfErg.style.color = "green";
-            corrAnswers ++;
-        } else {
-            tfErg.textContent = "❌ Falsch!";
-            tfErg.style.color = "red";
-        }
-        // Nach Klick alle Buttons deaktivieren
-        answerButtons.forEach(btn => btn.disabled = true);
+        questionCnt++;
     }
 
     function naechsteFrage() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
+
+        const total = quizData.it.length;
+        const current = questionCnt;
+        const percent = (current / total) * 100;
+        progressBar.style.width = `${percent}%`;
+        progressText.textContent = `${current} / ${total} beantwortet`;
+        if (questionCnt < quizData.it.length) {
             ladeFrage();
         } else {
-            tfAufgabe.value = "Quiz beendet!";
-            tfErg.textContent = "🎉 Du hast alle Fragen beantwortet. Richtige antworten: ";
-            answerButtons.forEach(btn => {
+            tfAufgabe.textContent = "Quiz beendet!";
+            tfErg.textContent = "🎉 Du hast alle Fragen beantwortet. Richtige antworten: " + corrAnswers + " / " + questionCnt;
+            butAnsw.forEach(btn => {
                 btn.textContent = "";
                 btn.disabled = true;
             });
+            butNext.disabled = true;
+            currentQuestionIndex = 0;
+            questionCnt = 0;
+            corrAnswers = 0;
+            questions = [];
         }
     }
 
     function abbrechen() {
-        tfAufgabe.value = "";
-        tfErg.textContent = "";
-        answerButtons.forEach(btn => {
+        butAnsw.forEach(btn => {
             btn.textContent = btn.id;
             btn.disabled = false;
         });
+        tfAufgabe.value = "Quiz abgebrochen!"
+        tfErg.textContent = "Du hast von " + questionCnt + " Frage(n) " + corrAnswers + " richtig beantwortet."
+        
+        progressBar.style.width = "0%";
+        progressText.textContent = `0 / ${quizData.it.length} beantwortet`;
+
         currentQuestionIndex = 0;
         questionCnt = 0;
         corrAnswers = 0;
@@ -86,26 +117,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     butIt.addEventListener('click', function () {
         
-        tfAufg.textContent = question;
-    
-        butAntw.forEach((button,i) =>{
-            button.textContent = answers[i];
+        naechsteFrage();
+        /*
+        tfAufgabe.textContent = quizData[questionCnt].frage;
+        Erg= quizData[questionCnt].answers[0];
+
+        butAnsw.forEach((button,i) =>{
+            button.textContent = quizData.answers[i];
         })
+        
+
+        butNext.disabled = false;
+        */
+        butNext.disabled = false;
     });
 
-    butAntw.forEach(button => {
+    butNext.disabled = true;
+
+    butAnsw.forEach(button => {
         button.addEventListener('click', function () {
           const text = this.textContent;
 
     
           if (text === Erg) {
-            ergebnis.textContent = '✅ "'+text+'" ist Richtig!';
-            ergebnis.style.color = 'green';
+            tfErg.textContent = '✅ "'+text+'" ist Richtig! (' + Erg + ')';
+            tfErg.style.color = 'green';
+            corrAnswers++;
           } else {
-            ergebnis.textContent = '❌ "'+text+'" ist Falsch!';
-            ergebnis.style.color = 'red';
+            tfErg.textContent = '❌ "'+text+'" ist Falsch! (' + Erg + ')';
+            tfErg.style.color = 'red';
           }
-          butAntw.forEach(btn => {
+          butAnsw.forEach(btn => {
             btn.disabled = true;
         });
         });
@@ -118,5 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // "Abbruch"
     butCancel.addEventListener('click', function () {
         abbrechen();
+        butNext.disabled = true;
     });
+
+    var xhr = getXhr();
   });

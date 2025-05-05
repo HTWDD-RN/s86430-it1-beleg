@@ -1,0 +1,6 @@
+04.05. Beginn:
+    Lesen der Aufgabenstellung, Erstellung des HTML-Gerüsts und von CSS durch Kopieren eines Großteils aus Praiktumslösung.
+    Beginn des Javascripts für Aufsgabe einer Frage und von Auswertung. Beim Testen Probleme mit javascript-Anbindung.
+    Lösen durch Debuggen mithilfe von ChatGBT.
+    -> Programm kann Frage mit Auswahl anzeigen und Sagen, ob Antwort stimmt oder nicht.
+05. 05. Hinzufügen von Progressbar, inzufügen von Funktionalität für Next und Cancel-Button.

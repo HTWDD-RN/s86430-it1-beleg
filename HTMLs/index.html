@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>Lernprogramm</title>
     <link rel="stylesheet" href="index.css">
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <script src="script.js" type="text/javascript"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="ROBOTS" content="INDEX, FOLLOW"/>
+
+    <noscript>
+      Sie haben JavaScript deaktiviert. Diese Seite benötigt zwingend JavaScript.
+    </noscript>
   </head>
   <body>
     <header>
@@ -36,10 +47,15 @@
                 Antwort:
                 <button class="answer" type="button" id="A">A</button>
                 <button class="answer" type="button" id="B">B</button>
-                <button class="answer" type="button" d="C">C</button>
+                <button class="answer" type="button" id="C">C</button>
                 <button class="answer" type="button" id="D">D</button>
-                <script src="script.js"></script>
             </form>
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p id="progressText">0 / 0 beantwortet</p>
+            
+
             <p id="ergebnis"></p>
             <br>
             wie weiter?
