@@ -4,3 +4,5 @@
     Lösen durch Debuggen mithilfe von ChatGBT.
     -> Programm kann Frage mit Auswahl anzeigen und Sagen, ob Antwort stimmt oder nicht.
 05. 05. Hinzufügen von Progressbar, inzufügen von Funktionalität für Next und Cancel-Button.
+08.05. Schnittstelle zu Quiz-Server hinzugefügt -> abfragen von antworten und lösung möglich
+ mithilfe von callbacks (mithilfe von Erklärung dazu von ChatGBT) Einfügen von Kategorien und davon abhängigen Quizfragen.

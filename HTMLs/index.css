@@ -22,7 +22,10 @@ header {background-image: url("Dino.jpg");
 main { background-color: grey; 
 }
 
-div {text-align: middle ;order: 2;flex:5em}
+div {text-align: middle ;
+    order: 2;
+    flex:5em;
+    background-color: rgb(199, 178, 152);}
 
 article {background-color: rgb(208, 102, 109);order: 1;flex: 15em}
 
