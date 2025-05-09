@@ -51,7 +51,7 @@ class Model {
         this.xhrreq = false;
         this.isCorrect = false; 
         this.quiznr = 5;
-        this.quizlen = 0;
+        this.quizLen = 0;
 
         const username=  "richter_georg@outlook.com";
         const pw = "secret";
@@ -78,10 +78,7 @@ class Model {
     }
 
     getTask(callback) {
-        if (this.currentIndex < this.quizLen) {
-            let task= this.sendQstXhr(callback,this.quiznr+this.currentIndex);
-        }else 
-            callback(null);
+        let task= this.sendQstXhr(callback,this.quiznr+this.currentIndex);
     }
 
     checkAnswer(callback) {
@@ -189,8 +186,7 @@ class Presenter {
         //let frag = await this.m.getTask();
         this.m.getTask(() => {
             let frag = this.m.questdata;
-            View.renderText(frag.text);
-            if (frag && frag.text && frag.options) {
+            if (this.m.currentIndex < this.m.quizLen && frag) {
                 View.renderText(frag.text);
                 let shuffled = [...frag.options].sort(() => Math.random() - 0.5);
                 this.m.currentIndex++;
