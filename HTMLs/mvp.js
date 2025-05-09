@@ -46,9 +46,11 @@ class Model {
         };
         this.currentIndex = 0;
         this.correctAnswers = 0;
-        this.questdata = {};
+        this.jsondata = {};
+        this.xhrdata = {};
+        this.question = "";
+        this.options = []
         this.answer = "";
-        this.xhrreq = false;
         this.isCorrect = false; 
         this.quiznr = 5;
         this.quizLen = 0;
@@ -60,10 +62,14 @@ class Model {
     }
 
     setCategory(cat) {
-        if (this.quizData[cat]) {
+        //if (this.quizData[cat]) {
             this.currentCategory = cat;
             this.currentIndex = 0;
             this.correctAnswers = 0;
+            if(cat = "allg") {
+                this.quiznr = 1595
+                this.quizLen = 10;
+            }
             if(cat = "it") {
                 this.quiznr = 1595
                 this.quizLen = 10;
@@ -74,31 +80,35 @@ class Model {
             if(cat == "piano"){
                 this.quiznr = 1595;
             }
-        }
+        //}
     }
 
     getTask(callback) {
-        let task= this.sendQstXhr(callback,this.quiznr+this.currentIndex);
+        if(this.currentCategory == "allg")
+            this.sendQstXhr(callback,this.quiznr+this.currentIndex);
+        else{
+            this.getLocalXhr(callback,this.currentIndex)
+        }
     }
 
     checkAnswer(callback) {
-        if(this.xhrreq == true)
+        if(this.currentCategory == "allg")
         {
-            this.xhrreq = false;
             let i=0;
             for(i=0; i< 4; i++) //4: Anzahl der Options
-                if(this.answer === this.questdata.options[i])
+                if(this.answer === this.options[i])
                     break;
-            this.sendAnsXhr(callback, this.questdata.id+this.currentIndex -1 , i);
+            this.sendAnsXhr(callback, this.quiznr+this.currentIndex -1 , i);
 
         }
         else{
-            let correct = this.quizData.it[this.currentIndex].answers[0];
+            let correct = this.options[0];
             if (this.answer === correct) {
+                this.isCorrect = true;
                 this.correctAnswers++;
-                return true;
+                callback(true);
             }
-            return false;
+            callback(false);
         }
     }
 
@@ -115,17 +125,42 @@ class Model {
         this.correctAnswers = 0;
     }
 
-    
-    sendQstXhr(callback,nr) {
+    getLocalXhr(callback,index) {
         this.xhr = getXhr();
-        this.xhrreq = true;
         this.xhr.onreadystatechange = () => {
             if (this.xhr.readyState !== 4) return;
 
             if (this.xhr.status === 200) {
                 try{
-                    this.questdata = JSON.parse(this.xhr.responseText);
-                    console.log("Daten geladen:", this.questdata);
+                    this.jsondata = JSON.parse(this.xhr.responseText);
+                    console.log("Daten aus JSON geladen:");
+                    this.question = this.jsondata[this.currentCategory][index].a;
+                    this.options = this.jsondata[this.currentCategory][index].l;
+                    callback(true);  // Text ist Ergebnis
+                }catch(e){
+                    console.error("Fehler beim Parsen der Daten", e);
+                    callback(false);
+                }
+            } else {
+                callback("Fehler beim Laden der Aufgabe.");
+            }
+        };
+        this.xhr.open('GET', 'quizdata.json');
+        this.xhr.send(null);
+
+    }
+    
+    sendQstXhr(callback,nr) {
+        this.xhr = getXhr();
+        this.xhr.onreadystatechange = () => {
+            if (this.xhr.readyState !== 4) return;
+
+            if (this.xhr.status === 200) {
+                try{
+                    this.xhrdata = JSON.parse(this.xhr.responseText);
+                    console.log("Daten geladen:", this.xhrdata);
+                    this.question = this.xhrdata.text;
+                    this.options = this.xhrdata.options;
                     callback(true);  // Text ist Ergebnis
                 }catch(e){
                     console.error("Fehler beim Parsen der Daten", e);
@@ -148,8 +183,9 @@ class Model {
 
             if (this.xhr.status === 200) {
                 try{
-                    this.questdata= JSON.parse(this.xhr.responseText);
-                    console.log("Daten erhalten:", this.questdata);
+                    this.xhrdata= JSON.parse(this.xhr.responseText);
+                    this.isCorrect = this.xhrdata.success;
+                    console.log("Daten erhalten:", this.xhrdata);
                     callback(true);  // Text ist Ergebnis
                 }catch(e){
                     console.error("Fehler beim Parsen der Daten", e);
@@ -185,41 +221,39 @@ class Presenter {
    setTask() {
         //let frag = await this.m.getTask();
         this.m.getTask(() => {
-            let frag = this.m.questdata;
-            if (this.m.currentIndex < this.m.quizLen && frag) {
-                View.renderText(frag.text);
-                let shuffled = [...frag.options].sort(() => Math.random() - 0.5);
+            if (this.m.currentIndex < this.m.quizLen && this.m.question) {
+                View.renderText(this.m.question);
+                let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
                 this.m.currentIndex++;
                 shuffled.forEach((ans, i) => {
                     View.inscribeButtons(i, ans, ans);  // pos = tatsächlicher Antworttext
                 });
-            } else {
-
+            }
+            else {
+                console.log(this.m.currentIndex+ " < "+ this.m.quizLen +"&&"+ this.m.question)
                 View.renderText("Quiz beendet!");
                 this.showStats();
                 View.disableButtons();
                 this.m.reset();
                 document.getElementById("next").textContent = "Nochmal Fragen lösen";
             }
-            this.updateProgressBar();
+            this.m.question = "";
         });
     }
 
     checkAnswer(answerText) {
         this.m.answer = answerText;
         this.m.checkAnswer(() => {
-            let antw = this.m.questdata;
-            if(antw){
-                if(antw.success){
-                    this.m.correctAnswers++;
-                    View.renderErgebnis("✅ '"+answerText+"' ist Richtig!");
-                }
-                else
-                    View.renderErgebnis("❌ '"+answerText+"' ist Falsch!");
-                View.disableButtons();
-                this.updateProgressBar();
+            if(this.m.isCorrect){
+                this.m.correctAnswers++;
+                View.renderErgebnis("✅ '"+answerText+"' ist Richtig!");
             }
-            else View.renderErgebnis("Fehler");
+            else
+                View.renderErgebnis("❌ '"+answerText+"' ist Falsch!");
+            this.m.options=[];
+            this.m.xhrdata = {};
+            View.disableButtons();
+            this.updateProgressBar();
         });
     }
 
@@ -242,24 +276,33 @@ class View {
 
     setHandler() {
         document.getElementById("answers").addEventListener("click", this.checkEvent.bind(this), false);
+        document.getElementById("allgemein").addEventListener("click", this.startallg.bind(this), false);
         document.getElementById("it").addEventListener("click", this.startit.bind(this), false);
         document.getElementById("next").addEventListener("click", this.loadNext.bind(this), false)
         document.getElementById("cancel").addEventListener("click", this.cancelQuiz.bind(this), false)
     }   
 
+    startallg(){
+        this.p.m.setCategory("allg");
+        this.startquiz();
+    }
 
-    startit() {
-        document.getElementById("next").disabled = false;
+    startit(){
         this.p.m.setCategory("it");
+        this.p.updateProgressBar();
+        this.startquiz();
+    }
+    startquiz() {
+        document.getElementById("next").disabled = false;
         this.loadNext();
     }
 
     loadNext(){
         View.renderErgebnis("");
         document.getElementById("next").textContent = "Weiter";
-        let selected = document.querySelector('input[name="extlocRb"]:checked');
-        this.p.m.xhrreq = selected.value;//(selected.value === true);
+        this.p.updateProgressBar();
         this.p.setTask();
+
     }
 
     cancelQuiz(){
