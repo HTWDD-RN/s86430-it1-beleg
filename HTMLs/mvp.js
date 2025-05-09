@@ -257,6 +257,8 @@ class View {
     loadNext(){
         View.renderErgebnis("");
         document.getElementById("next").textContent = "Weiter";
+        let selected = document.querySelector('input[name="extlocRb"]:checked');
+        this.p.m.xhrreq = selected.value;//(selected.value === true);
         this.p.setTask();
     }
 
