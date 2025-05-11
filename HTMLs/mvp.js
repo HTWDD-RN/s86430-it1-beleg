@@ -35,13 +35,25 @@ class Model {
         this.quizData = {
             it: [
                 {
-                    frage: "Was bedeutet HTML?",
-                    answers: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyper Tool Multi Language"],
+                    a: "Was bedeutet HTML?",
+                    l: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyper Tool Multi Language"],
                 },
                 {
-                    frage: "Was macht CSS?",
-                    answers: ["Farbe und Layout", "Struktur", "Programmiert Logik", "Verwaltet Datenbanken"],
+                    a: "Was macht CSS?",
+                    l: ["Farbe und Layout", "Struktur", "Programmiert Logik", "Verwaltet Datenbanken"],
                 }
+            ],
+            mathe: [
+                {a: "x^2 + x^2", l: ["2x^2", "x^4", "x^8", "2x^4"]},
+                {a: "x^2 * x^2", l: ["x^4", "x^2", "2x^2", "4x"]},
+                {a: "(x + 3)^2", l: ["x^2 + 6x + 9", "x^2 + 3", "x^2 + 9", "x^2 + 3x + 9"]},
+                {a: "Ableitung von x^3", l: ["3x^2", "3x", "x^2", "x^3"]},
+                {a: "Integral von 2x dx", l: ["x^2 + C", "2x + C", "x + C", "2x^2 + C"]},
+                {a: "Lösung von x^2 = 9", l: ["±3", "3", "-3", "0"]},
+                {a: "Was ist der Wert von sin(90°)?", l: ["1", "0", "-1", "0.5"]},
+                {a: "Was ist 0!", l: ["1", "0", "undefiniert", "-1"]},
+                {a: "Wie viele Nullstellen hat x^2 - 4?", l: ["2", "1", "0", "unendlich"]},
+                {a: "Was ist die 1. Ableitung von sin(x)?", l: ["cos(x)", "-cos(x)", "-sin(x)", "1"]}
             ]
         };
         this.currentIndex = 0;
@@ -87,7 +99,10 @@ class Model {
         if(this.currentCategory == "allg")
             this.sendQstXhr(callback,this.quiznr+this.currentIndex);
         else{
-            this.getLocalXhr(callback,this.currentIndex)
+            this.question = this.quizData.mathe[this.currentIndex].a;
+            this.options = this.quizData.mathe[this.currentIndex].l;
+            callback(true);
+            //this.getLocalXhr(callback,this.currentIndex)
         }
     }
 
