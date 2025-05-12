@@ -29,6 +29,7 @@ function getXhr() { // API für asynchrone Aufrufe
     else return false;
 }
 
+
 // ################ Model ###########################
 class Model {
     constructor() {
@@ -92,6 +93,7 @@ class Model {
             }
             if(cat == "piano"){
                 this.quiznr = 1595;
+                this.quizLen = 10;
             }
         //}
     }
@@ -241,8 +243,15 @@ class Presenter {
                     this.m.question = "$" + this.m.question + "$";
                     for(let i=0;i<4;i++)
                         this.m.options[i] = "$" + this.m.options[i] + "$";
-                }  
-                View.renderText(this.m.question);
+                } 
+                if(this.m.currentCategory == "noten"){
+                    const fragsplitted = this.m.question.split("::");   //[0]: Text, [1]: Noten
+                    View.renderText(fragsplitted[0]);
+                    if(fragsplitted[1] != "")
+                        this.v.renderNoten(fragsplitted[1]);
+                }
+                else 
+                    View.renderText(this.m.question);
                 let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
                 this.m.currentIndex++;
                 shuffled.forEach((ans, i) => {
@@ -302,6 +311,7 @@ class View {
         document.getElementById("allgemein").addEventListener("click", this.startallg.bind(this), false);
         document.getElementById("it").addEventListener("click", this.startit.bind(this), false);
         document.getElementById("mathe").addEventListener("click", this.startmathe.bind(this), false);
+        document.getElementById("noten").addEventListener("click", this.startnoten.bind(this), false);
         document.getElementById("next").addEventListener("click", this.loadNext.bind(this), false)
         document.getElementById("cancel").addEventListener("click", this.cancelQuiz.bind(this), false)
     }   
@@ -322,6 +332,13 @@ class View {
         this.p.updateProgressBar();
         this.startquiz();
     }
+
+    startnoten(){
+        this.p.m.setCategory("noten");
+        this.p.updateProgressBar();
+        this.startquiz();
+    }
+
     startquiz() {
         document.getElementById("next").disabled = false;
         this.loadNext();
@@ -348,7 +365,6 @@ class View {
     static inscribeButtons(i, text, data) {
         const btn = document.querySelectorAll("#answers > *")[i];
         btn.innerHTML = text;
-        console.log("Anwort:" +text);
         window.renderMathInElement(btn, {delimiters: [
             {left: "$$", right: "$$", display: true},
           {left: "$", right: "$", display: true}
@@ -367,6 +383,30 @@ class View {
             const antwort = button.getAttribute("data-antwort");
             this.p.checkAnswer(antwort);
         }
+    }
+
+    renderNoten(noten){
+        const { Factory, EasyScore, System } = Vex.Flow;
+
+        const vf = new Factory({
+            renderer: { elementId: 'boo', width: 500, height: 200 },
+        });
+
+        const score = vf.EasyScore();
+        const system = vf.System();
+        while(noten.split(",").length < 4)
+            noten = noten + ",r/q,D4/q";
+        console.log("Noten: " +noten);
+        system.addStave({
+                voices: [
+                    //score.voice(score.notes(noten)),
+                    score.voice(score.notes(noten)),
+                ],
+            })
+            //.addClef('treble')
+            .addTimeSignature('1/1');
+
+        vf.draw();
     }
 
     static renderText(text) {

@@ -38,15 +38,24 @@
   ],
 
   "noten": [
-    {"a": "C4", "l": ["C", "D", "E", "H"]},
-    {"a": "(C4 E4 G4)", "l": ["C", "H", "F", "D"]},
-    {"a": "Welche Note liegt eine große Terz über C?", "l": ["E", "D", "G", "F"]},
-    {"a": "Welche Tonart hat kein Kreuz oder b?", "l": ["C-Dur", "G-Dur", "F-Dur", "A-Dur"]},
-    {"a": "Welcher Ton folgt auf A in der chromatischen Tonleiter?", "l": ["A#", "B", "C", "G#"]},
-    {"a": "Wie viele Halbtöne hat eine Oktave?", "l": ["12", "8", "7", "10"]},
-    {"a": "Welche Taste kommt direkt nach E auf dem Klavier?", "l": ["F", "F#", "G", "E#"]},
-    {"a": "Was ist ein Halbton unter G?", "l": ["F#", "E", "D#", "G#"]},
-    {"a": "Welche Note hat die Frequenz 440 Hz?", "l": ["A4", "C4", "G4", "E4"]},
-    {"a": "Was ist die relative Molltonart zu C-Dur?", "l": ["A-Moll", "E-Moll", "D-Moll", "G-Moll"]}
+    {"a": "::F4/q,B3/q,D3/q", "l": ["F", "G", "A", "C"]},
+    {"a": "::G4,B4,D5", "l": ["G", "D", "A", "F"]},
+    {"a": "::E4,G4,B4", "l": ["E", "G", "H", "C"]},
+    {"a": "Welche Note klingt als nächsthöhere in der C-Dur Tonleiter nach G4?::A4", "l": ["A", "H", "F", "D"]},
+    {"a": "Welche Töne gehören zum A-Moll Akkord::A4,C5,E5", "l": ["A", "C", "D", "F"]},
+    {"a": "Was ist die Quinte zu D4::A4", "l": ["A", "E", "C", "G"]},
+    {"a": "Was ist die große Terz über C4::E4", "l": ["E", "D", "F", "A"]},
+    {"a": "Wie lauten die Töne des F-Dur Akkords::F4,A4,C5", "l": ["F", "B", "G", "C"]},
+    {"a": "Was ist die parallele Molltonart zu C-Dur::A-Moll", "l": ["A-Moll", "E-Moll", "G-Moll", "D-Moll"]},
+    {"a": "Welche Note fehlt im G-Dur Akkord? (G4, __, D5)::B4", "l": ["B", "C", "E", "F"]},
+    {"a": "Welcher Akkord besteht aus E4, G4, B4::E-Moll", "l": ["E-Moll", "G-Dur", "C-Dur", "A-Moll"]},
+    {"a": "Was ist die Subdominante in C-Dur::F-Dur", "l": ["F-Dur", "G-Dur", "A-Moll", "D-Moll"]},
+    {"a": "Welcher Ton liegt eine Oktave über C4::C5", "l": ["C5", "G4", "A4", "B4"]},
+    {"a": "Wie lauten die Töne des D-Moll Akkords::D4,F4,A4", "l": ["D", "F", "G", "B"]},
+    {"a": "Wie heißt die enharmonische Verwechslung von A#::Bb", "l": ["Bb", "B", "Ab", "A"]},
+    {"a": "Welche Töne hat ein H-Moll Akkord::B3,D4,F#4", "l": ["B", "D", "F#", "G"]},
+    {"a": "Was ist die Dominante von F-Dur::C-Dur", "l": ["C-Dur", "G-Dur", "A-Moll", "D-Moll"]},
+    {"a": "Welcher Ton ist eine kleine Terz über A4::C5", "l": ["C5", "B4", "D5", "E5"]},
+    {"a": "Wie lauten die Stammtöne der C-Dur Tonleiter::C4,D4,E4,F4,G4,A4,B4", "l": ["C", "D", "E", "F"]}
   ]
 }
