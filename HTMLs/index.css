@@ -11,14 +11,14 @@ body {background-color: aliceblue}
 .mybutton {background-color: green;}
 
 
-div p::first-line{font-size: large;color: brown}
+div p{font-size: large;color: brown}
 
 body {display: def;
     gap: 0.5em;
 }
 
-header {background-image: url("Dino.jpg");
-        }
+/*header {background-image: url("Dino.jpg");
+        }*/
 main { background-color: grey; 
 }
 

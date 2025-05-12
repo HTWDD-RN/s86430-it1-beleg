@@ -86,8 +86,9 @@ class Model {
                 this.quiznr = 1595
                 this.quizLen = 10;
             }
-            if(cat = "math"){
+            if(cat = "mathe"){
                 this.quiznr = 1595;
+                this.quizLen=10;
             }
             if(cat == "piano"){
                 this.quiznr = 1595;
@@ -99,10 +100,7 @@ class Model {
         if(this.currentCategory == "allg")
             this.sendQstXhr(callback,this.quiznr+this.currentIndex);
         else{
-            this.question = this.quizData.mathe[this.currentIndex].a;
-            this.options = this.quizData.mathe[this.currentIndex].l;
-            callback(true);
-            //this.getLocalXhr(callback,this.currentIndex)
+            this.getLocalXhr(callback,this.currentIndex) 
         }
     }
 
@@ -116,15 +114,17 @@ class Model {
             this.sendAnsXhr(callback, this.quiznr+this.currentIndex -1 , i);
 
         }
-        else{
+        else
+        {
             let correct = this.options[0];
-            if (this.answer === correct) {
+            if (this.answer == correct) {
                 this.isCorrect = true;
                 this.correctAnswers++;
                 callback(true);
             }
-            callback(false);
-        }
+            else
+                callback(false);
+        }  
     }
 
     getProgress() {
@@ -237,6 +237,11 @@ class Presenter {
         //let frag = await this.m.getTask();
         this.m.getTask(() => {
             if (this.m.currentIndex < this.m.quizLen && this.m.question) {
+                if(this.m.currentCategory == "mathe"){
+                    this.m.question = "$" + this.m.question + "$";
+                    for(let i=0;i<4;i++)
+                        this.m.options[i] = "$" + this.m.options[i] + "$";
+                }  
                 View.renderText(this.m.question);
                 let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
                 this.m.currentIndex++;
@@ -258,10 +263,12 @@ class Presenter {
 
     checkAnswer(answerText) {
         this.m.answer = answerText;
+        console.log("Answer: "+answerText);
         this.m.checkAnswer(() => {
             if(this.m.isCorrect){
                 this.m.correctAnswers++;
                 View.renderErgebnis("✅ '"+answerText+"' ist Richtig!");
+                this.m.isCorrect = false;
             }
             else
                 View.renderErgebnis("❌ '"+answerText+"' ist Falsch!");
@@ -287,12 +294,14 @@ class View {
         this.setHandler();
         View.renderText("Bitte Kategorie auswählen");
         document.getElementById("next").disabled = true;
+        View.disableButtons();
     }
 
     setHandler() {
         document.getElementById("answers").addEventListener("click", this.checkEvent.bind(this), false);
         document.getElementById("allgemein").addEventListener("click", this.startallg.bind(this), false);
         document.getElementById("it").addEventListener("click", this.startit.bind(this), false);
+        document.getElementById("mathe").addEventListener("click", this.startmathe.bind(this), false);
         document.getElementById("next").addEventListener("click", this.loadNext.bind(this), false)
         document.getElementById("cancel").addEventListener("click", this.cancelQuiz.bind(this), false)
     }   
@@ -304,6 +313,12 @@ class View {
 
     startit(){
         this.p.m.setCategory("it");
+        this.p.updateProgressBar();
+        this.startquiz();
+    }
+
+    startmathe(){
+        this.p.m.setCategory("mathe");
         this.p.updateProgressBar();
         this.startquiz();
     }
@@ -332,15 +347,24 @@ class View {
 
     static inscribeButtons(i, text, data) {
         const btn = document.querySelectorAll("#answers > *")[i];
-        btn.textContent = text;
+        btn.innerHTML = text;
+        console.log("Anwort:" +text);
+        window.renderMathInElement(btn, {delimiters: [
+            {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: true}
+        ],
+          thowOnError: false
+        } );
         btn.setAttribute("data-antwort", data);
         btn.disabled = false;
     }
 
     checkEvent(event) {
         console.log(event.type);
-        if (event.target.nodeName === "BUTTON") {
-            const antwort = event.target.getAttribute("data-antwort");
+        console.log(event.target.nodeName);
+        let button = event.target.closest("button");
+        if (button) {
+            const antwort = button.getAttribute("data-antwort");
             this.p.checkAnswer(antwort);
         }
     }
@@ -349,13 +373,26 @@ class View {
         const div = document.getElementById("boo");
         div.innerHTML = ""; // Clear
         const p = document.createElement("p");
-        p.textContent = text;
+        p.innerHTML = text;
+        console.log("Text:" +text);
+        window.renderMathInElement(p, {delimiters: [
+            {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ],
+          thowOnError: false
+        } );
         div.appendChild(p);
     }
 
     static renderErgebnis(text) {
         let erg = document.getElementById("ergebnis");
         erg.textContent = text;
+        window.renderMathInElement(erg, {delimiters: [
+            {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ],
+          thowOnError: false
+        } );
     }
 
     static disableButtons() {
