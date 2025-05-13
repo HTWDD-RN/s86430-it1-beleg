@@ -17,6 +17,8 @@ body {display: def;
     gap: 0.5em;
 }
 
+.answer {flex: 10em}
+
 /*header {background-image: url("Dino.jpg");
         }*/
 main { background-color: grey; 
