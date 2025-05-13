@@ -67,7 +67,8 @@ div p{font-size: large;
 #next {
     min-width: 10em;
     font-size: 1.2em;
-    background-color: rgb(73, 157, 206);
+    color: black;
+    background-color: rgb(117, 153, 231);
 }
 
 #cancel {
