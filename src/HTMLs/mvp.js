@@ -162,7 +162,7 @@ class Model {
                 callback("Fehler beim Laden der Aufgabe.");
             }
         };
-        this.xhr.open('GET', 'quizdata.json');
+        this.xhr.open('GET', '../Data/quizdata.json');
         this.xhr.send(null);
 
     }
