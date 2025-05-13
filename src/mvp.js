@@ -79,15 +79,15 @@ class Model {
             this.currentCategory = cat;
             this.currentIndex = 0;
             this.correctAnswers = 0;
-            if(cat = "allg") {
+            if(cat == "allg") {
                 this.quiznr = 1595
                 this.quizLen = 10;
             }
-            if(cat = "it") {
+            if(cat == "it") {
                 this.quiznr = 1595
                 this.quizLen = 10;
             }
-            if(cat = "mathe"){
+            if(cat == "mathe"){
                 this.quiznr = 1595;
                 this.quizLen=10;
             }
@@ -98,23 +98,32 @@ class Model {
         //}
     }
 
-    getTask(callback) {
-        if(this.currentCategory == "allg")
-            this.sendQstXhr(callback,this.quiznr+this.currentIndex);
-        else{
-            this.getLocalXhr(callback,this.currentIndex) 
+    async getTask() {
+        if(this.currentCategory == "allg"){
+            let success = await this.sendQstXhr(this.quiznr+this.currentIndex)
+            if (!success || !this.question) {
+                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
+                return;
+            }
         }
+        else{
+            let success = await this.getLocalXhr(this.currentIndex)
+            if (!success || !this.question) {
+                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
+                return;
+            }
+        }  
     }
 
-    checkAnswer(callback) {
+    async checkAnswer() {
         if(this.currentCategory == "allg")
         {
             let i=0;
             for(i=0; i< 4; i++) //4: Anzahl der Options
                 if(this.answer === this.options[i])
                     break;
-            this.sendAnsXhr(callback, this.quiznr+this.currentIndex -1 , i);
-
+            let success = await this.sendAnsXhr(this.quiznr+this.currentIndex -1 , i);
+            return success;
         }
         else
         {
@@ -122,10 +131,10 @@ class Model {
             if (this.answer == correct) {
                 this.isCorrect = true;
                 this.correctAnswers++;
-                callback(true);
+                return(true);
             }
             else
-                callback(false);
+                return(false);
         }  
     }
 
@@ -142,80 +151,100 @@ class Model {
         this.correctAnswers = 0;
     }
 
-    getLocalXhr(callback,index) {
+    async getLocalXhr(index) {
         this.xhr = getXhr();
-        this.xhr.onreadystatechange = () => {
-            if (this.xhr.readyState !== 4) return;
 
-            if (this.xhr.status === 200) {
-                try{
-                    this.jsondata = JSON.parse(this.xhr.responseText);
-                    console.log("Daten aus JSON geladen:");
-                    this.question = this.jsondata[this.currentCategory][index].a;
-                    this.options = this.jsondata[this.currentCategory][index].l;
-                    callback(true);  // Text ist Ergebnis
-                }catch(e){
-                    console.error("Fehler beim Parsen der Daten", e);
-                    callback(false);
+        return new Promise((resolve) =>{
+            this.xhr.onreadystatechange = () => {
+                if (this.xhr.readyState !== 4) return;
+
+                if (this.xhr.status === 200) {
+                    try{
+                        this.jsondata = JSON.parse(this.xhr.responseText);
+                        console.log("Daten aus JSON geladen:");
+                        this.question = this.jsondata[this.currentCategory][index].a;
+                        this.options = this.jsondata[this.currentCategory][index].l;
+                        resolve(true);  // Text ist Ergebnis
+                    }catch(e){
+                        console.log("Fehler beim Parsen der Daten", e);
+                        resolve(false);
+                    }
+                } else {
+                    console.error("Fehler beim Laden der Aufgabe.");
+                    resolve(false);
                 }
-            } else {
-                callback("Fehler beim Laden der Aufgabe.");
-            }
-        };
-        this.xhr.open('GET', './Data/quizdata.json');
-        this.xhr.send(null);
+            };
+            this.xhr.open('GET', './Data/quizdata.json');
+            this.xhr.send(null);
+        });
 
     }
     
-    sendQstXhr(callback,nr) {
+    async sendQstXhr(nr) {
         this.xhr = getXhr();
-        this.xhr.onreadystatechange = () => {
-            if (this.xhr.readyState !== 4) return;
+        const TIMEOUT_MS = 5000;
 
-            if (this.xhr.status === 200) {
-                try{
-                    this.xhrdata = JSON.parse(this.xhr.responseText);
-                    console.log("Daten geladen:", this.xhrdata);
-                    this.question = this.xhrdata.text;
-                    this.options = this.xhrdata.options;
-                    callback(true);  // Text ist Ergebnis
-                }catch(e){
-                    console.error("Fehler beim Parsen der Daten", e);
-                    callback(false);
+        return new Promise((resolve) => {
+
+            const timeoutId = setTimeout(() => {
+                this.xhr.abort();
+                console.error("Zeitüberschreitung beim Laden der Frage.");
+                return (false);
+            }, TIMEOUT_MS);
+            this.xhr.onreadystatechange = () => {
+                if (this.xhr.readyState !== 4) return;
+                clearTimeout(timeoutId);
+
+                if (this.xhr.status === 200) {
+                    try{
+                        this.xhrdata = JSON.parse(this.xhr.responseText);
+                        console.log("Daten geladen:", this.xhrdata);
+                        this.question = this.xhrdata.text;
+                        this.options = this.xhrdata.options;
+                        resolve (true);  // Text ist Ergebnis
+                    }catch(e){
+                        console.error("Fehler beim Parsen der Daten", e);
+                        resolve(false);
+                    }
+                } else {
+                    console.log("Fehler beim Laden der Aufgabe.");
+                    resolve(false);
                 }
-            } else {
-                callback("Fehler beim Laden der Aufgabe.");
-            }
-        };
-        this.xhr.open('GET', 'https://idefix.informatik.htw-dresden.de:8888/api/quizzes/' + nr);
-        this.xhr.setRequestHeader("Authorization", "Basic " + this.userdata);
-        this.xhr.send(null);
+            };
+            this.xhr.open('GET', 'https://idefix.informatik.htw-dresden.de:8888/api/quizzes/' + nr);
+            this.xhr.setRequestHeader("Authorization", "Basic " + this.userdata);
+            this.xhr.send(null);
+        });
     }
 
-    sendAnsXhr(callback,nr, index) {
+    async sendAnsXhr(nr, index) {
         this.xhr = getXhr();
-        this.xhr.onreadystatechange = () => {
-            if (this.xhr.readyState !== 4)
-                return;
 
-            if (this.xhr.status === 200) {
-                try{
-                    this.xhrdata= JSON.parse(this.xhr.responseText);
-                    this.isCorrect = this.xhrdata.success;
-                    console.log("Daten erhalten:", this.xhrdata);
-                    callback(true);  // Text ist Ergebnis
-                }catch(e){
-                    console.error("Fehler beim Parsen der Daten", e);
-                    callback(false);
+        return new Promise((resolve) => {
+            this.xhr.onreadystatechange = () => {
+                if (this.xhr.readyState !== 4)
+                    return;
+
+                if (this.xhr.status === 200) {
+                    try{
+                        this.xhrdata= JSON.parse(this.xhr.responseText);
+                        this.isCorrect = this.xhrdata.success;
+                        console.log("Daten erhalten:", this.xhrdata);
+                        resolve(true);  // Text ist Ergebnis
+                    }catch(e){
+                        console.error("Fehler beim Parsen der Daten", e);
+                        resolve(false);
+                    }
+                } else {
+                    console.error("Fehler beim Laden der Lösung.");
+                    resolve(false);
                 }
-            } else {
-                callback("Fehler beim Laden der Lösung.");
-            }
-        };
-        this.xhr.open('POST', 'https://idefix.informatik.htw-dresden.de:8888/api/quizzes/'+nr+'/solve');
-        this.xhr.setRequestHeader("Authorization", "Basic " + this.userdata);
-        this.xhr.setRequestHeader("Content-Type", "application/json");
-        this.xhr.send("["+index+"]");
+            };
+            this.xhr.open('POST', 'https://idefix.informatik.htw-dresden.de:8888/api/quizzes/'+nr+'/solve');
+            this.xhr.setRequestHeader("Authorization", "Basic " + this.userdata);
+            this.xhr.setRequestHeader("Content-Type", "application/json");
+            this.xhr.send("["+index+"]");
+        });
     }
 }
 
@@ -235,9 +264,9 @@ class Presenter {
         View.renderErgebnis(`Du hast ${stats.correct} von ${stats.total} Fragen richtig beantwortet.`);
     }
 
-   setTask() {
+   async setTask() {
         //let frag = await this.m.getTask();
-        this.m.getTask(() => {
+        await this.m.getTask();
             if (this.m.currentIndex < this.m.quizLen && this.m.question) {
                 if(this.m.currentCategory == "mathe"){
                     this.m.question = "$" + this.m.question + "$";
@@ -267,13 +296,12 @@ class Presenter {
                 document.getElementById("next").textContent = "Nochmal Fragen lösen";
             }
             this.m.question = "";
-        });
     }
 
-    checkAnswer(answerText) {
+    async checkAnswer(answerText) {
         this.m.answer = answerText;
         console.log("Answer: "+answerText);
-        this.m.checkAnswer(() => {
+        await this.m.checkAnswer()
             if(this.m.isCorrect){
                 this.m.correctAnswers++;
                 View.renderErgebnis("✅ '"+answerText+"' ist Richtig!");
@@ -285,7 +313,6 @@ class Presenter {
             this.m.xhrdata = {};
             View.disableButtons();
             this.updateProgressBar();
-        });
     }
 
     updateProgressBar() {
@@ -341,6 +368,9 @@ class View {
 
     startquiz() {
         document.getElementById("next").disabled = false;
+        this.p.m.reset();
+        View.resetButtons();
+        View.renderText("Quiz laden...");
         this.loadNext();
     }
 
@@ -373,6 +403,13 @@ class View {
         } );
         btn.setAttribute("data-antwort", data);
         btn.disabled = false;
+    }
+
+    static resetButtons(){
+        const btns = document.querySelectorAll(".answer");
+        btns.forEach(button => {
+            button.textContent = button.id;
+        });
     }
 
     checkEvent(event) {

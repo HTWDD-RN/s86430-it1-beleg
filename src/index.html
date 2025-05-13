@@ -58,10 +58,10 @@
             <br>
             <div id="boo"></div>
             <div id="answers">
-              <button class="answer" type="button">A</button>
-              <button class="answer" type="button">B</button>
-              <button class="answer" type="button">C</button>
-              <button class="answer" type="button">D</button>
+              <button class="answer" type="button" id="A">A</button>
+              <button class="answer" type="button" id="B">B</button>
+              <button class="answer" type="button" id="C">C</button>
+              <button class="answer" type="button" id="D">D</button>
             </div>
             <!--button id="start">Start</button!-->
             <div class="progress-wrapper">
@@ -79,4 +79,13 @@
         </div>
     </main>
   </body>
+  <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        });
+    }
+    </script>
 </html>

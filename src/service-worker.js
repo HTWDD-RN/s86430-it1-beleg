@@ -1,4 +1,4 @@
-
+const CACHE_NAME = "AufgabenCache"
 const filesToCache = [
     "/",
     "src/",
@@ -41,5 +41,26 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Size4-Regular.woff2",
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2"
     ];
+
+self.addEventListener('install', event => event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.add('/'))
+));
     
+self.addEventListener('fetch', event => event.respondWith(
+    caches.open(CACHE_NAME)
+        .then(cache => cache.match(event.request))
+        .then(response => response || fetch(event.request))
+));
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(keyList =>
+            Promise.all(keyList.map(key => {
+                if (key !== CACHE_NAME) {
+                    return caches.delete(key);
+                }
+            }))
+        )
+    );
+});
     
