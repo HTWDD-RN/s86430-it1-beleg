@@ -162,7 +162,7 @@ class Model {
                 callback("Fehler beim Laden der Aufgabe.");
             }
         };
-        this.xhr.open('GET', '/Data/quizdata.json');
+        this.xhr.open('GET', './Data/quizdata.json');
         this.xhr.send(null);
 
     }
@@ -346,7 +346,7 @@ class View {
 
     loadNext(){
         View.renderErgebnis("");
-        document.getElementById("next").textContent = "Weiter";
+        document.getElementById("next").textContent = "Nächste Frage";
         this.p.updateProgressBar();
         this.p.setTask();
 

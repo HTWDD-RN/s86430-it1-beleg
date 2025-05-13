@@ -1,36 +1,23 @@
-nav ul {
-    list-style-type: none;
-    }
-nav ul li {display: inline}
-nav ul li a:hover{background-color: #111;}
-nav ul li a:link{text-decoration: none;}
-
-body {background-color: aliceblue}
-
-
-.mybutton {background-color: green;}
-
-
-div p{font-size: large;color: brown}
-
-body {display: def;
+body {
+    margin: 0;
     gap: 0.5em;
+    background-color: aliceblue;
 }
-
-.answer {flex: 10em}
-
-/*header {background-image: url("Dino.jpg");
-        }*/
+        
 main { background-color: grey; 
 }
 
-div {text-align: middle ;
-    order: 2;
-    flex:5em;
-    background-color: rgb(199, 178, 152);}
+header,main,div,article{
+    margin: 0.25em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+}
 
-article {background-color: rgb(208, 102, 109);order: 1;flex: 15em}
 
+article {background-color: rgb(208, 102, 109);
+    order: 1;
+}
 
 .container {
     grid-template-areas: 
@@ -38,25 +25,74 @@ article {background-color: rgb(208, 102, 109);order: 1;flex: 15em}
     "div";
     vertical-align: middle;
 }
+/*
 @media all and(min-width: 40em){
-    
-    main{
-        display:flex;
+    .container{
         flex-direction: column;
-        grid-column: span;
-        vertical-align: middle;
     } 
-    /* Änderung der Reihenfolge für Kinder in Folge lt. html */
+    /* Änderung der Reihenfolge für Kinder in Folge lt. html 
     main > * {
         order: 0;
     }
+}*/
+
+div {text-align: middle ;
+    order: 2;
+    flex:5em;
+    background-color: rgb(199, 178, 152);}
+    
+div p{font-size: large;
+    color: brown
 }
-header,main,div,article{
-    margin: 0.25em;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
+
+#answers {
+    display: flex;
+    flex-direction: row;       /* Standard: nebeneinander */
+    justify-content: center;
+    gap: 1em;
+    margin: 1em 0;
+  }
+  
+.answer {
+    padding: 0.5em 1em;
+    background-color: rgb(228, 228, 228);
+    border: none;
+    border-radius: 0.3em;
+    font-size: 1em;
+    cursor: pointer;
+    min-width: 8em;
+  }
+
+
+#next {
+    min-width: 10em;
+    font-size: 1.2em;
+    background-color: rgb(73, 157, 206);
 }
+
+#cancel {
+    background-color: rgb(209, 102, 109);
+}
+
+.opt {
+    display:  flex;
+    flex-direction: row;
+}
+@media (max-width: 600px) {
+    #answers {
+      flex-direction: column;     /* vertikal */
+      align-items: center;        /* zentriert */
+    }
+    .answer {
+      width: 80%;                 /* breite Buttons auf kleineren Geräten */
+    }
+    .opt{
+        flex-direction: column;     /* vertikal */
+    }
+
+    
+  }
+
 
 .progress-container {
     width: 100%;
