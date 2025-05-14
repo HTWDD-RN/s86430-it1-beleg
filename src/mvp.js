@@ -32,31 +32,10 @@ function getXhr() { // API für asynchrone Aufrufe
 
 // ################ Model ###########################
 class Model {
+    
     constructor() {
-        this.quizData = {
-            it: [
-                {
-                    a: "Was bedeutet HTML?",
-                    l: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyper Tool Multi Language"],
-                },
-                {
-                    a: "Was macht CSS?",
-                    l: ["Farbe und Layout", "Struktur", "Programmiert Logik", "Verwaltet Datenbanken"],
-                }
-            ],
-            mathe: [
-                {a: "x^2 + x^2", l: ["2x^2", "x^4", "x^8", "2x^4"]},
-                {a: "x^2 * x^2", l: ["x^4", "x^2", "2x^2", "4x"]},
-                {a: "(x + 3)^2", l: ["x^2 + 6x + 9", "x^2 + 3", "x^2 + 9", "x^2 + 3x + 9"]},
-                {a: "Ableitung von x^3", l: ["3x^2", "3x", "x^2", "x^3"]},
-                {a: "Integral von 2x dx", l: ["x^2 + C", "2x + C", "x + C", "2x^2 + C"]},
-                {a: "Lösung von x^2 = 9", l: ["±3", "3", "-3", "0"]},
-                {a: "Was ist der Wert von sin(90°)?", l: ["1", "0", "-1", "0.5"]},
-                {a: "Was ist 0!", l: ["1", "0", "undefiniert", "-1"]},
-                {a: "Wie viele Nullstellen hat x^2 - 4?", l: ["2", "1", "0", "unendlich"]},
-                {a: "Was ist die 1. Ableitung von sin(x)?", l: ["cos(x)", "-cos(x)", "-sin(x)", "1"]}
-            ]
-        };
+        this.quiznr = 1595; //Nummer auf Quizserver, wo Quiz startet
+        this.randomArray=[];
         this.currentIndex = 0;
         this.correctAnswers = 0;
         this.jsondata = {};
@@ -65,7 +44,6 @@ class Model {
         this.options = []
         this.answer = "";
         this.isCorrect = false; 
-        this.quiznr = 5;
         this.quizLen = 0;
 
         const username=  "richter_georg@outlook.com";
@@ -79,35 +57,50 @@ class Model {
             this.currentCategory = cat;
             this.currentIndex = 0;
             this.correctAnswers = 0;
+            this.randomArray = [];
             if(cat == "allg") {
                 this.quiznr = 1595
                 this.quizLen = 10;
             }
             if(cat == "it") {
-                this.quiznr = 1595
                 this.quizLen = 10;
             }
             if(cat == "mathe"){
-                this.quiznr = 1595;
                 this.quizLen=10;
             }
-            if(cat == "piano"){
-                this.quiznr = 1595;
+            if(cat == "noten"){
                 this.quizLen = 10;
             }
+            if(cat == "akkorde"){
+                this.quizLen = 10;
+            }
+            for(let i=0;i<this.quizLen;i++)
+                this.randomArray.push(i);
+            this.randomizeArray(this.randomArray);
         //}
     }
 
+    randomizeArray(zahlen){
+        // Fisher-Yates Shuffle
+        for (let i = zahlen.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [zahlen[i], zahlen[j]] = [zahlen[j], zahlen[i]]; 
+        }
+        return zahlen;
+    }
+
     async getTask() {
+        if(this.currentIndex>=this.quizLen)
+            return;
         if(this.currentCategory == "allg"){
-            let success = await this.sendQstXhr(this.quiznr+this.currentIndex)
+            let success = await this.sendQstXhr(this.quiznr+this.randomArray[this.currentIndex])
             if (!success || !this.question) {
                 alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
                 return;
             }
         }
         else{
-            let success = await this.getLocalXhr(this.currentIndex)
+            let success = await this.getLocalXhr(this.randomArray[this.currentIndex])
             if (!success || !this.question) {
                 alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
                 return;
@@ -273,15 +266,19 @@ class Presenter {
                     for(let i=0;i<4;i++)
                         this.m.options[i] = "$" + this.m.options[i] + "$";
                 } 
-                if(this.m.currentCategory == "noten"){
+                if(this.m.currentCategory == "noten" || this.m.currentCategory == "akkorde"){
                     const fragsplitted = this.m.question.split("::");   //[0]: Text, [1]: Noten
                     View.renderText(fragsplitted[0]);
-                    if(fragsplitted[1] != "")
-                        this.v.renderNoten(fragsplitted[1]);
+                    if(fragsplitted[1] != ""){
+                        let noten = fragsplitted[1].split(";");
+                        this.v.renderNoten(noten);
+                    }
                 }
                 else 
                     View.renderText(this.m.question);
-                let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
+                //let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
+                let shuffled = Array.from(this.m.options);
+                this.m.randomizeArray(shuffled); 
                 this.m.currentIndex++;
                 shuffled.forEach((ans, i) => {
                     View.inscribeButtons(i, ans, ans);  // pos = tatsächlicher Antworttext
@@ -331,6 +328,7 @@ class View {
         View.renderText("Bitte Kategorie auswählen");
         document.getElementById("next").disabled = true;
         View.disableButtons();
+
     }
 
     setHandler() {
@@ -339,6 +337,7 @@ class View {
         document.getElementById("it").addEventListener("click", this.startit.bind(this), false);
         document.getElementById("mathe").addEventListener("click", this.startmathe.bind(this), false);
         document.getElementById("noten").addEventListener("click", this.startnoten.bind(this), false);
+        document.getElementById("akkorde").addEventListener("click", this.startakkorde.bind(this), false);
         document.getElementById("next").addEventListener("click", this.loadNext.bind(this), false)
         document.getElementById("cancel").addEventListener("click", this.cancelQuiz.bind(this), false)
     }   
@@ -350,19 +349,21 @@ class View {
 
     startit(){
         this.p.m.setCategory("it");
-        this.p.updateProgressBar();
         this.startquiz();
     }
 
     startmathe(){
         this.p.m.setCategory("mathe");
-        this.p.updateProgressBar();
         this.startquiz();
     }
 
     startnoten(){
         this.p.m.setCategory("noten");
-        this.p.updateProgressBar();
+        this.startquiz();
+    }
+
+    startakkorde(){
+        this.p.m.setCategory("akkorde");
         this.startquiz();
     }
 
@@ -423,27 +424,91 @@ class View {
     }
 
     renderNoten(noten){
-        const { Factory, EasyScore, System } = Vex.Flow;
-
-        const vf = new Factory({
-            renderer: { elementId: 'boo', width: 500, height: 200 },
+        const {
+            Renderer,
+            Stave,
+            StaveNote,
+            Accidental,
+            Voice,
+            Formatter
+        } = Vex.Flow;
+          
+        // Create an SVG renderer and attach it to the DIV element named "boo".
+        const div = document.getElementById('boo');
+        const renderer = new Renderer(div, Renderer.Backends.SVG);
+          
+          // Configure the rendering context. SOnst werden nicht unbedingt alle Noten angezeigt
+        renderer.resize(500, 200);
+        const context = renderer.getContext();
+          
+          // Create a stave of width 400 at position 10, 40 on the canvas.
+        const stave = new Stave(10, 40, 400);
+          
+          // Add a clef and time signature.
+        stave.addClef('treble').addTimeSignature('4/4');
+          
+          // Connect it to the rendering context and draw!
+        stave.setContext(context).draw();
+          
+          // Create the notes
+        let notes = [];
+        noten.forEach(note => {
+            let akkord = note.split(',');
+            
+            let staveNote = new StaveNote({
+                keys: akkord,
+                duration: 'q'
+            });
+            akkord.forEach((teilnote,i) => {
+                if(teilnote.includes('##'))
+                    staveNote.addModifier(new Accidental("##"),i);
+                else if(teilnote.includes('#'))
+                    staveNote.addModifier(new Accidental("#"),i);
+                else if(teilnote.includes('b') && !teilnote.includes('bb'))
+                    staveNote.addModifier(new Accidental("b"),i);
+            });
+            notes.push(staveNote)
         });
-
-        const score = vf.EasyScore();
-        const system = vf.System();
-        while(noten.split(",").length < 4)
-            noten = noten + ",r/q,D4/q";
-        console.log("Noten: " +noten);
-        system.addStave({
-                voices: [
-                    //score.voice(score.notes(noten)),
-                    score.voice(score.notes(noten)),
-                ],
-            })
-            //.addClef('treble')
-            .addTimeSignature('1/1');
-
-        vf.draw();
+        /*
+        notes = [
+            // A quarter-note C.
+            new StaveNote({
+              keys: ['c/4'],
+              duration: 'q'
+            }),
+          
+            // A quarter-note D.
+            new StaveNote({
+              keys: ['d/4'],
+              duration: 'q'
+            }),
+          
+            // A quarter-note rest. Note that the key (b/4) specifies the vertical
+            // position of the rest.
+            new StaveNote({
+              keys: ['b/4'],
+              duration: 'qr'
+            }),
+          
+            // A C-Major chord.
+            new StaveNote({
+              keys: ['c/4', 'e/4', 'g/4'],
+              duration: 'q'
+            }),
+        ];
+        */
+          // Create a voice in 4/4 and add above notes
+        const voice = new Voice({
+            num_beats: noten.length,
+            beat_value: 4
+        });
+        voice.addTickables(notes);
+          
+          // Format and justify the notes to 400 pixels.
+        new Formatter().joinVoices([voice]).format([voice], 350);
+          
+          // Render voice
+        voice.draw(context, stave);
     }
 
     static renderText(text) {

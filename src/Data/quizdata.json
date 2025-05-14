@@ -38,24 +38,28 @@
   ],
 
   "noten": [
-    {"a": "::F4/q,B3/q,D3/q", "l": ["F", "G", "A", "C"]},
-    {"a": "::G4,B4,D5", "l": ["G", "D", "A", "F"]},
-    {"a": "::E4,G4,B4", "l": ["E", "G", "H", "C"]},
-    {"a": "Welche Note klingt als nächsthöhere in der C-Dur Tonleiter nach G4?::A4", "l": ["A", "H", "F", "D"]},
-    {"a": "Welche Töne gehören zum A-Moll Akkord::A4,C5,E5", "l": ["A", "C", "D", "F"]},
-    {"a": "Was ist die Quinte zu D4::A4", "l": ["A", "E", "C", "G"]},
-    {"a": "Was ist die große Terz über C4::E4", "l": ["E", "D", "F", "A"]},
-    {"a": "Wie lauten die Töne des F-Dur Akkords::F4,A4,C5", "l": ["F", "B", "G", "C"]},
-    {"a": "Was ist die parallele Molltonart zu C-Dur::A-Moll", "l": ["A-Moll", "E-Moll", "G-Moll", "D-Moll"]},
-    {"a": "Welche Note fehlt im G-Dur Akkord? (G4, __, D5)::B4", "l": ["B", "C", "E", "F"]},
-    {"a": "Welcher Akkord besteht aus E4, G4, B4::E-Moll", "l": ["E-Moll", "G-Dur", "C-Dur", "A-Moll"]},
-    {"a": "Was ist die Subdominante in C-Dur::F-Dur", "l": ["F-Dur", "G-Dur", "A-Moll", "D-Moll"]},
-    {"a": "Welcher Ton liegt eine Oktave über C4::C5", "l": ["C5", "G4", "A4", "B4"]},
-    {"a": "Wie lauten die Töne des D-Moll Akkords::D4,F4,A4", "l": ["D", "F", "G", "B"]},
-    {"a": "Wie heißt die enharmonische Verwechslung von A#::Bb", "l": ["Bb", "B", "Ab", "A"]},
-    {"a": "Welche Töne hat ein H-Moll Akkord::B3,D4,F#4", "l": ["B", "D", "F#", "G"]},
-    {"a": "Was ist die Dominante von F-Dur::C-Dur", "l": ["C-Dur", "G-Dur", "A-Moll", "D-Moll"]},
-    {"a": "Welcher Ton ist eine kleine Terz über A4::C5", "l": ["C5", "B4", "D5", "E5"]},
-    {"a": "Wie lauten die Stammtöne der C-Dur Tonleiter::C4,D4,E4,F4,G4,A4,B4", "l": ["C", "D", "E", "F"]}
+    { "a": "Welche Note ist das?::c/4", "l": ["c", "d", "e", "f"] },
+    { "a": "Wie heißt diese Note?::f#/3", "l": ["f#", "f", "g", "e"] },
+    { "a": "Erkenne die Note::d/5", "l": ["d", "e", "c", "a"] },
+    { "a": "Welche Note ist hier notiert?::a/3", "l": ["a", "g", "b", "d"] },
+    { "a": "Was ist das für eine Note?::e/4", "l": ["e", "f", "g", "d"] },
+    { "a": "Tonart?::e/4;g/4;b/4", "l": ["E-Moll", "G-Dur", "C-Dur", "F-Dur"] },
+    { "a": "Tonart?::c/4;e/4;g/4", "l": ["C-Dur", "A-Moll", "F-Dur", "G-Dur"] },
+    { "a": "Tonart?::a/3;c/4;e/4", "l": ["A-Moll", "C-Dur", "E-Moll", "F-Dur"] },
+    { "a": "Grundton?::d/4;f#/4;a/4", "l": ["d", "f#", "a", "g"] },
+    { "a": "Akkordtyp?::g/3;b/3;d/4", "l": ["Dur", "Moll", "vermindert", "übermäßig"] }
+  ],
+
+  "akkorde": [
+    { "a": "Tonart?::e/5,g#/5,b/5", "l": ["E-Dur", "C-Moll", "A-Dur", "G-Dur"] },
+    { "a": "Grundton?::d/4,f#/4,a/4", "l": ["d", "f#", "a", "g"] },
+    { "a": "Tonart?::f/4,a/4,c/5", "l": ["F-Dur", "D-Moll", "B-Dur", "C-Dur"] },
+    { "a": "Grundton?::a/3,c/4,e/4", "l": ["a", "c", "e", "g"] },
+    { "a": "Tonart?::g/3,b/3,d/4", "l": ["G-Dur", "E-Moll", "C-Dur", "D-Dur"] },
+    { "a": "Grundton?::c/4,eb/4,g/4", "l": ["c", "eb", "g", "a"] },
+    { "a": "Tonart?::bb/3,d#/4,f#/4", "l": ["B-Dur", "H-Dur", "G#-Moll", "F#-Dur"] },
+    { "a": "Grundton?::b/3,d#/4,f#/4", "l": ["h", "f#", "d#", "g#"] },
+    { "a": "Tonart?::c#/4,e/4,g#/4", "l": ["C#-Moll", "A-Dur", "C-Dur", "E-Moll"] },
+    { "a": "Grundton?::f#/3,a/3,c#/4", "l": ["f#", "a", "c#", "e"] }
   ]
 }
