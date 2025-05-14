@@ -7,7 +7,7 @@ body {
 main { background-color: grey; 
 }
 
-header,main,div,article{
+header,main,div,article,footer{
     margin: 0.25em;
     padding: 0.5em;
     border: 1px solid #ccc;
@@ -15,14 +15,15 @@ header,main,div,article{
 }
 
 
-article {background-color: rgb(208, 102, 109);
+article {background-color: rgb(122, 143, 79);
     order: 1;
 }
 
 .container {
     grid-template-areas: 
     "article" 
-    "div";
+    "div"
+    "footer";
     vertical-align: middle;
 }
 /*

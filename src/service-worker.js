@@ -1,5 +1,6 @@
 const CACHE_NAME = "AufgabenCache"
 const filesToCache = [
+    "Data/",
     "index.css",
     "index.html",
     "mvp.js",
@@ -42,6 +43,20 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2"
     ];
 
+self.addEventListener('activate', evt =>
+    evt.waitUntil(
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== CURRENT_CACHE) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+    )
+);
+
 self.addEventListener('install', event => 
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => 
@@ -54,4 +69,12 @@ self.addEventListener('fetch', event => event.respondWith(
         .then(cache => cache.match(event.request))
         .then(response => response || fetch(event.request))
 ));
+
+// cache the current page to make it available for offline
+const update = request =>
+    caches
+      .open(CURRENT_CACHE)
+      .then(cache =>
+        fetch(request).then(response => cache.put(request, response))
+      );
     
