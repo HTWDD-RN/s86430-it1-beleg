@@ -1,13 +1,13 @@
 const CACHE_NAME = "AufgabenCache"
 const filesToCache = [
-    "/",
-    "src/",
-    "src/Lernprogramm.css",
-    "src/Lernprogramm.html",
-    "src/Lernprogramm.js",
-    "src/manifest.webmanifest",
-    "src/questions.json",
-    "images/back.jpg",
+    "index.css",
+    "index.html",
+    "mvp.js",
+    "manifest.webmanifest",
+    "Data/quizdata.json",
+    "Images/birne.png",
+    /*
+    i"mages/back.jpg",
     "images/backfull.jpg",
     "images/general.png",
     "images/math.png",
@@ -15,7 +15,7 @@ const filesToCache = [
     "images/web.png",
     "images/icon.png",
     "images/icon_pwa_192.png",
-    "images/icon_pwa_512.png",
+    "images/icon_pwa_512.png",*/
     "scripts/katex/katex.min.js",
     "scripts/katex/katex.min.css",
     "scripts/katex/contrib/auto-render.min.js",
@@ -42,25 +42,16 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2"
     ];
 
-self.addEventListener('install', event => event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.add('/'))
-));
+self.addEventListener('install', event => 
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => 
+            cache.addAll(filesToCache))
+    )
+);
     
 self.addEventListener('fetch', event => event.respondWith(
     caches.open(CACHE_NAME)
         .then(cache => cache.match(event.request))
         .then(response => response || fetch(event.request))
 ));
-
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(keyList =>
-            Promise.all(keyList.map(key => {
-                if (key !== CACHE_NAME) {
-                    return caches.delete(key);
-                }
-            }))
-        )
-    );
-});
     
