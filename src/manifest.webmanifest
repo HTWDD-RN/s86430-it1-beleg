@@ -1,6 +1,7 @@
 {
     "name": "Lernprogramm",
     "short_name": "Lernen",
+    "description": "Lernprogramm mit 4 Kategorien von Georg Richter",
 
     "start_url": "https://www.informatik.htw-dresden.de/~s86430/Lernprogramm/",
     "scope": "/~s86430/Lernprogramm/",
@@ -15,7 +16,11 @@
         "browser"
     ],
 
-    "background_color": "#ffffff",
+    "launch_handler" : {
+      "client_mode": "auto"
+    },
+
+    "background_color" : "#ffffff",
     "theme_color": "#2c3e50",
     "icons": [
       {
@@ -36,6 +41,8 @@
         "type": "image/png",
         "purpose":"maskable"
       }
-    ]
-  }
+    ],
+    "lang": "de"
+}
+
   
