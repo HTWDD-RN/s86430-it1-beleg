@@ -42,8 +42,8 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Size4-Regular.woff2",
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2",
     "scripts/vexflow/vexflow-min.js",
-    "scripts/vexflow/vexflow-min.css",
-    "scripts/vexflow/auto-render.min.js"
+    //"scripts/vexflow/vexflow-min.css",
+    //"scripts/vexflow/auto-render.min.js"
     ];
 
 self.addEventListener('activate', evt =>
