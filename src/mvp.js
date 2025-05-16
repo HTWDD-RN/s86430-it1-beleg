@@ -257,7 +257,37 @@ class Presenter {
         View.renderErgebnis(`Du hast ${stats.correct} von ${stats.total} Fragen richtig beantwortet.`);
     }
 
-   async setTask() {
+    getNoten(notenString){
+        const {
+            Renderer,
+            Stave,
+            StaveNote,
+            Accidental,
+            Voice,
+            Formatter
+        } = Vex.Flow;
+
+        let notes = [];
+        notenString.forEach(note => {
+            let akkord = note.split(',');
+            
+            let staveNote = new StaveNote({
+                keys: akkord,
+                duration: 'q'
+            });
+            akkord.forEach((teilnote,i) => {
+                if(teilnote.includes('##'))
+                    staveNote.addModifier(new Accidental("##"),i);
+                else if(teilnote.includes('#'))
+                    staveNote.addModifier(new Accidental("#"),i);
+                else if(teilnote.includes('b') && !teilnote.includes('bb'))
+                    staveNote.addModifier(new Accidental("b"),i);
+            });
+            notes.push(staveNote)
+        });
+        return notes;
+    }
+    async setTask() {
         //let frag = await this.m.getTask();
         await this.m.getTask();
             if (this.m.currentIndex < this.m.quizLen && this.m.question) {
@@ -270,7 +300,8 @@ class Presenter {
                     const fragsplitted = this.m.question.split("::");   //[0]: Text, [1]: Noten
                     View.renderText(fragsplitted[0]);
                     if(fragsplitted[1] != ""){
-                        let noten = fragsplitted[1].split(";");
+                        let notenString = fragsplitted[1].split(";");
+                        noten = this.getNoten(notenString)
                         this.v.renderNoten(noten);
                     }
                 }
@@ -451,6 +482,7 @@ class View {
         stave.setContext(context).draw();
           
           // Create the notes
+          /*
         let notes = [];
         noten.forEach(note => {
             let akkord = note.split(',');
@@ -502,7 +534,7 @@ class View {
             num_beats: noten.length,
             beat_value: 4
         });
-        voice.addTickables(notes);
+        voice.addTickables(noten);
           
           // Format and justify the notes to 400 pixels.
         new Formatter().joinVoices([voice]).format([voice], 350);
