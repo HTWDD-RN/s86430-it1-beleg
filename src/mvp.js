@@ -167,7 +167,7 @@ class Model {
                     resolve(false);
                 }
             };
-            this.xhr.open('GET', './Data/quizdata.json');
+            this.xhr.open('GET', 'Data/quizdata.json');
             this.xhr.send(null);
         });
 
