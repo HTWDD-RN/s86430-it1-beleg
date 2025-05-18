@@ -38,28 +38,28 @@
   ],
 
   "noten": [
-    { "a": "Welche Note ist das?::c/4", "l": ["c", "d", "e", "f"] },
-    { "a": "Wie heißt diese Note?::f#/3", "l": ["f#", "f", "g", "e"] },
-    { "a": "Erkenne die Note::d/5", "l": ["d", "e", "c", "a"] },
-    { "a": "Welche Note ist hier notiert?::a/3", "l": ["a", "g", "b", "d"] },
-    { "a": "Was ist das für eine Note?::e/4", "l": ["e", "f", "g", "d"] },
-    { "a": "Tonart?::e/4;g/4;b/4", "l": ["E-Moll", "G-Dur", "C-Dur", "F-Dur"] },
-    { "a": "Tonart?::c/4;e/4;g/4", "l": ["C-Dur", "A-Moll", "F-Dur", "G-Dur"] },
-    { "a": "Tonart?::a/3;c/4;e/4", "l": ["A-Moll", "C-Dur", "E-Moll", "F-Dur"] },
-    { "a": "Grundton?::d/4;f#/4;a/4", "l": ["d", "f#", "a", "g"] },
-    { "a": "Akkordtyp?::g/3;b/3;d/4", "l": ["Dur", "Moll", "vermindert", "übermäßig"] }
+    { "a": "Welche Note ist das?::bb/3", "l": ["b", "hes", "a", "c"] },
+    { "a": "Welche Note ist das?::eb/4", "l": ["es", "e", "dis", "fas"] },
+    { "a": "Welche Note ist das?::ab/3", "l": ["as", "ais", "aes", "buh"] },
+    { "a": "Welche Note ist das?::db/4", "l": ["des", "dis", "ces", "e"] },
+    { "a": "Welche Note ist das?::gb/3", "l": ["ges", "g", "fes", "a"] },
+    { "a": "Welche Note ist das?::bb/4", "l": ["b", "bes", "a", "cis"] },
+    { "a": "Welche Note ist das?::ab/4", "l": ["as", "g", "a", "f"] },
+    { "a": "Welche Note ist das?::db/5", "l": ["des", "d", "c", "e"] },
+    { "a": "Welche Note ist das?::eb/5", "l": ["es", "e", "des", "fis"] },
+    { "a": "Welche Note ist das?::gb/4", "l": ["ges", "gis", "fes", "as"] }
   ],
 
   "akkorde": [
-    { "a": "Tonart?::e/5,g#/5,b/5", "l": ["E-Dur", "C-Moll", "A-Dur", "G-Dur"] },
-    { "a": "Grundton?::d/4,f#/4,a/4", "l": ["d", "f#", "a", "g"] },
-    { "a": "Tonart?::f/4,a/4,c/5", "l": ["F-Dur", "D-Moll", "B-Dur", "C-Dur"] },
+    { "a": "Tonart?::e/5,g#/5,b/5", "l": ["E-Dur", "c-Moll", "C-Dur", "Gis-Dur"] },
+    { "a": "Grundton?::d/4,f#/4,a/4", "l": ["d", "fis", "a", "g"] },
+    { "a": "Tonart?::f/4,a/4,c/5", "l": ["F-Dur", "d-Moll", "H-Dur", "C-Dur"] },
     { "a": "Grundton?::a/3,c/4,e/4", "l": ["a", "c", "e", "g"] },
-    { "a": "Tonart?::g/3,b/3,d/4", "l": ["G-Dur", "E-Moll", "C-Dur", "D-Dur"] },
-    { "a": "Grundton?::c/4,eb/4,g/4", "l": ["c", "eb", "g", "a"] },
-    { "a": "Tonart?::bb/3,d#/4,f#/4", "l": ["B-Dur", "H-Dur", "G#-Moll", "F#-Dur"] },
-    { "a": "Grundton?::b/3,d#/4,f#/4", "l": ["h", "f#", "d#", "g#"] },
-    { "a": "Tonart?::c#/4,e/4,g#/4", "l": ["C#-Moll", "A-Dur", "C-Dur", "E-Moll"] },
-    { "a": "Grundton?::f#/3,a/3,c#/4", "l": ["f#", "a", "c#", "e"] }
+    { "a": "Tonart?::g/3,b/3,d/4", "l": ["G-Dur", "e-Moll", "C-Dur", "D-Dur"] },
+    { "a": "Grundton?::c/4,eb/4,g/4", "l": ["c", "es", "g", "a"] },
+    { "a": "Tonart?::bb/3,d#/4,f#/4", "l": ["B-Dur", "H-Dur", "gis-Moll", "Fis-Dur"] },
+    { "a": "Grundton?::b/3,d#/4,f#/4", "l": ["h", "fis", "dis", "gis"] },
+    { "a": "Tonart?::c#/4,e/4,g#/4", "l": ["cis-Moll", "A-Dur", "C-Dur", "e-Moll"] },
+    { "a": "Grundton?::f#/3,a/3,c#/4", "l": ["fis", "a", "cis", "e"] }
   ]
 }

@@ -123,7 +123,6 @@ class Model {
             let correct = this.options[0];
             if (this.answer == correct) {
                 this.isCorrect = true;
-                this.correctAnswers++;
                 return(true);
             }
             else
@@ -469,11 +468,11 @@ class View {
         const renderer = new Renderer(div, Renderer.Backends.SVG);
           
           // Configure the rendering context. SOnst werden nicht unbedingt alle Noten angezeigt
-        renderer.resize(500, 200);
+        renderer.resize(400, 120);
         const context = renderer.getContext();
           
           // Create a stave of width 400 at position 10, 40 on the canvas.
-        const stave = new Stave(10, 40, 400);
+        const stave = new Stave(10, 0, 200);
           
           // Add a clef and time signature.
         stave.addClef('treble').addTimeSignature('4/4');
@@ -496,39 +495,12 @@ class View {
                     staveNote.addModifier(new Accidental("##"),i);
                 else if(teilnote.includes('#'))
                     staveNote.addModifier(new Accidental("#"),i);
-                else if(teilnote.includes('b') && !teilnote.includes('bb'))
+                else if(teilnote.includes('b'))// && !teilnote.includes('bb'))
                     staveNote.addModifier(new Accidental("b"),i);
             });
             notes.push(staveNote)
         });
-        /*
-        notes = [
-            // A quarter-note C.
-            new StaveNote({
-              keys: ['c/4'],
-              duration: 'q'
-            }),
-          
-            // A quarter-note D.
-            new StaveNote({
-              keys: ['d/4'],
-              duration: 'q'
-            }),
-          
-            // A quarter-note rest. Note that the key (b/4) specifies the vertical
-            // position of the rest.
-            new StaveNote({
-              keys: ['b/4'],
-              duration: 'qr'
-            }),
-          
-            // A C-Major chord.
-            new StaveNote({
-              keys: ['c/4', 'e/4', 'g/4'],
-              duration: 'q'
-            }),
-        ];
-        */
+        
           // Create a voice in 4/4 and add above notes
         const voice = new Voice({
             num_beats: noten.length,
