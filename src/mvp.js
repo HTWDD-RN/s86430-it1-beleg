@@ -481,7 +481,7 @@ class View {
         stave.setContext(context).draw();
           
           // Create the notes
-          /*
+        
         let notes = [];
         noten.forEach(note => {
             let akkord = note.split(',');
