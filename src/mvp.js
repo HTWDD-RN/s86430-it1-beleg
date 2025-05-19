@@ -143,6 +143,34 @@ class Model {
         this.correctAnswers = 0;
     }
 
+    async getTone(note){
+        this.xhr = getXhr();
+
+        return new Promise((resolve) =>{
+            this.xhr.onreadystatechange = () => {
+                if (this.xhr.readyState !== 4) return;
+
+                if (this.xhr.status === 200) {
+                    const context = new AudioContext();
+                context.decodeAudioData(this.xhr.response,
+                    (buffer) => {
+                        console.log("AudioBuffer erfolgreich geladen.");
+                        resolve(buffer);
+                    },
+                    (error) => {
+                        console.error("Fehler beim Dekodieren der Audiodaten", error);
+                        resolve(null);
+                    });
+                } else {
+                    console.error("Fehler beim Laden der Note.");
+                    resolve(null);
+                }
+            };
+            this.xhr.open('GET', 'Data/tone_'+ note+'.mp3');
+            this.xhr.send(null);
+        });
+    }
+
     async getLocalXhr(index) {
         this.xhr = getXhr();
 
@@ -275,6 +303,8 @@ class Presenter {
                 duration: 'q'
             });
             akkord.forEach((teilnote,i) => {
+                audioBuffer = getTone(teilnote);
+                this.m.playSound(audioBuffer);
                 if(teilnote.includes('##'))
                     staveNote.addModifier(new Accidental("##"),i);
                 else if(teilnote.includes('#'))
