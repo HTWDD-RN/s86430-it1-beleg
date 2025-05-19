@@ -152,14 +152,14 @@ class Model {
 
                 if (this.xhr.status === 200) {
                     const context = new AudioContext();
-                context.decodeAudioData(this.xhr.response,
-                    (buffer) => {
-                        console.log("AudioBuffer erfolgreich geladen.");
-                        resolve(buffer);
-                    },
-                    (error) => {
-                        console.error("Fehler beim Dekodieren der Audiodaten", error);
-                        resolve(null);
+                    context.decodeAudioData(this.xhr.response,
+                        (buffer) => {
+                            console.log("AudioBuffer erfolgreich geladen.");
+                            resolve(buffer);
+                        },
+                        (error) => {
+                            console.error("Fehler beim Dekodieren der Audiodaten", error);
+                            resolve(null);
                     });
                 } else {
                     console.error("Fehler beim Laden der Note.");
@@ -304,7 +304,8 @@ class Presenter {
             });
             akkord.forEach((teilnote,i) => {
                 audioBuffer = getTone(teilnote);
-                this.m.playSound(audioBuffer);
+                if(audioBuffer)
+                    this.m.playSound(audioBuffer);
                 if(teilnote.includes('##'))
                     staveNote.addModifier(new Accidental("##"),i);
                 else if(teilnote.includes('#'))
@@ -451,6 +452,14 @@ class View {
         document.getElementById("next").textContent = "Nochmal Fragen lösen";
         View.disableButtons();
 
+    }
+    static playSound(audio){
+        const context = new AudioContext();
+        const source = context.createBufferSource();
+        source.buffer = audio;
+        source.connect(context.destination);
+        source.start();
+        
     }
 
     static inscribeButtons(i, text, data) {
