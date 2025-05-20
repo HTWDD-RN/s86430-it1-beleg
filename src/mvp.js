@@ -162,7 +162,7 @@ class Model {
                             resolve(null);
                     });
                 } else {
-                    console.error("Fehler beim Laden der Note.");
+                    console.error("Fehler beim Laden des Tons.");
                     resolve(null);
                 }
             };
@@ -284,7 +284,7 @@ class Presenter {
         View.renderErgebnis(`Du hast ${stats.correct} von ${stats.total} Fragen richtig beantwortet.`);
     }
 
-    getNoten(notenString){
+    async getNoten(notenString){
         const {
             Renderer,
             Stave,
@@ -295,15 +295,18 @@ class Presenter {
         } = Vex.Flow;
 
         let notes = [];
-        notenString.forEach(note => {
+        //notenString.forEach(note => {
+            let note = notenString[0];
             let akkord = note.split(',');
             
             let staveNote = new StaveNote({
                 keys: akkord,
                 duration: 'q'
             });
-            akkord.forEach((teilnote,i) => {
-                audioBuffer = getTone(teilnote);
+           for(let i=0;i<akkord.length;i++)
+            {
+                const teilnote = akkord[i]
+                audioBuffer = await this.m.getTone(teilnote);
                 if(audioBuffer)
                     this.m.playSound(audioBuffer);
                 if(teilnote.includes('##'))
@@ -312,9 +315,9 @@ class Presenter {
                     staveNote.addModifier(new Accidental("#"),i);
                 else if(teilnote.includes('b') && !teilnote.includes('bb'))
                     staveNote.addModifier(new Accidental("b"),i);
-            });
+            }
             notes.push(staveNote)
-        });
+        //});
         return notes;
     }
     async setTask() {
@@ -519,26 +522,6 @@ class View {
           // Connect it to the rendering context and draw!
         stave.setContext(context).draw();
           
-          // Create the notes
-        
-        let notes = [];
-        noten.forEach(note => {
-            let akkord = note.split(',');
-            
-            let staveNote = new StaveNote({
-                keys: akkord,
-                duration: 'q'
-            });
-            akkord.forEach((teilnote,i) => {
-                if(teilnote.includes('##'))
-                    staveNote.addModifier(new Accidental("##"),i);
-                else if(teilnote.includes('#'))
-                    staveNote.addModifier(new Accidental("#"),i);
-                else if(teilnote.includes('b'))// && !teilnote.includes('bb'))
-                    staveNote.addModifier(new Accidental("b"),i);
-            });
-            notes.push(staveNote)
-        });
         
           // Create a voice in 4/4 and add above notes
         const voice = new Voice({
