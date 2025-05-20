@@ -162,11 +162,12 @@ class Model {
                             resolve(null);
                     });
                 } else {
-                    console.error("Fehler beim Laden des Tons.");
+                    console.error("Fehler beim Laden des Tons "+note);
                     resolve(null);
                 }
             };
-            this.xhr.open('GET', 'Data/tone_'+ note+'.mp3');
+            const tonename = note.replace('/',"");
+            this.xhr.open('GET', 'Data/tone_'+ tonename+'.mp3');
             this.xhr.send(null);
         });
     }
@@ -306,9 +307,11 @@ class Presenter {
            for(let i=0;i<akkord.length;i++)
             {
                 const teilnote = akkord[i]
-                audioBuffer = await this.m.getTone(teilnote);
+                /*Play Sound to Tone*/
+                let audioBuffer = await this.m.getTone(teilnote);
                 if(audioBuffer)
                     this.m.playSound(audioBuffer);
+                
                 if(teilnote.includes('##'))
                     staveNote.addModifier(new Accidental("##"),i);
                 else if(teilnote.includes('#'))
@@ -334,7 +337,7 @@ class Presenter {
                     View.renderText(fragsplitted[0]);
                     if(fragsplitted[1] != ""){
                         let notenString = fragsplitted[1].split(";");
-                        noten = this.getNoten(notenString)
+                        noten = await this.getNoten(notenString);
                         this.v.renderNoten(noten);
                     }
                 }
