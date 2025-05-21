@@ -311,13 +311,13 @@ class Presenter {
                 /*let audioBuffer = await this.m.getTone(teilnote);
                 if(audioBuffer)
                     this.m.playSound(audioBuffer);*/
-                View.playSound(teilnote);
+                View.playSound(teilnote.replace("/",""));
                 
                 if(teilnote.includes('##'))
                     staveNote.addModifier(new Accidental("##"),i);
                 else if(teilnote.includes('#'))
                     staveNote.addModifier(new Accidental("#"),i);
-                else if(teilnote.includes('b') && !teilnote.includes('bb'))
+                else if(teilnote.includes('b') && teilnote.length != 1)
                     staveNote.addModifier(new Accidental("b"),i);
             }
             notes.push(staveNote)
@@ -460,24 +460,12 @@ class View {
         View.disableButtons();
 
     }
-    static playSound(audio){
-        /*
-        const context = new AudioContext();
-        const source = context.createBufferSource();
-        source.buffer = audio;
-        source.connect(context.destination);
-        source.start();
-        */
+    static playSound(tone){
 
-        let piano;
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        Soundfont.instrument(audioCtx, 'acoustic_grand_piano').then(function (p) {
-            piano = p;
+        var ctx = new AudioContext();
+        Soundfont.instrument(ctx, 'acoustic_grand_piano').then(function (piano) {
+            piano.play(tone);
         });
-
-        piano.play(audio, audioCtx.currentTime,{gain: 0.8, duration: 1.5});
     }
 
     static inscribeButtons(i, text, data) {

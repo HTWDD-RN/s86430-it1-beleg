@@ -40,7 +40,12 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2",
     "scripts/vexflow/vexflow-min.js",
     "scripts/vexflow/vexflow-min.css",
-    "scripts/vexflow/auto-render.min.js"
+    "scripts/vexflow/auto-render.min.js",
+    "soundfont-player/",
+    "soundfont-player/dist/",
+    "soundfont-player/lib/",
+    "soundfont-player/dist/soundfont-player.min.js",
+
     
     ];
 
