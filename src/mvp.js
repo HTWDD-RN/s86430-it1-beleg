@@ -308,9 +308,10 @@ class Presenter {
             {
                 const teilnote = akkord[i]
                 /*Play Sound to Tone*/
-                let audioBuffer = await this.m.getTone(teilnote);
+                /*let audioBuffer = await this.m.getTone(teilnote);
                 if(audioBuffer)
-                    this.m.playSound(audioBuffer);
+                    this.m.playSound(audioBuffer);*/
+                View.playSound(teilnote);
                 
                 if(teilnote.includes('##'))
                     staveNote.addModifier(new Accidental("##"),i);
@@ -460,12 +461,23 @@ class View {
 
     }
     static playSound(audio){
+        /*
         const context = new AudioContext();
         const source = context.createBufferSource();
         source.buffer = audio;
         source.connect(context.destination);
         source.start();
-        
+        */
+
+        let piano;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        Soundfont.instrument(audioCtx, 'acoustic_grand_piano').then(function (p) {
+            piano = p;
+        });
+
+        piano.play(audio, audioCtx.currentTime,{gain: 0.8, duration: 1.5});
     }
 
     static inscribeButtons(i, text, data) {
