@@ -13,6 +13,7 @@ const filesToCache = [
     "Images/",
     "Images/birne.png",
     
+    
     "scripts/",
     "scripts/katex/katex.min.js",
     "scripts/katex/katex.min.css",
@@ -44,8 +45,8 @@ const filesToCache = [
     "soundfont-player/",
     "soundfont-player/dist/",
     "soundfont-player/lib/",
-    "soundfont-player/dist/soundfont-player.min.js",
-
+    "soundfont-player/dist/soundfont-player.min.js"   //WICHTIG! komma bei letzter Zeile zwingend weglassen, sonst kann array nicht gelesen werden
+    /**/
     
     ];
 
@@ -66,8 +67,8 @@ self.addEventListener('activate', evt =>
   )
 );
 
-// on install we download the routes we want to cache for offline
-self.addEventListener('install', evt =>
+// on install we download the routes we want to cache for offline 
+self.addEventListener('install', evt =>         //Service-Worker hängt bei Installing fest -> Problem mit "FilesToCache"-Array (zB falscher Pfad)
   evt.waitUntil(
     caches.open(CURRENT_CACHE).then(cache => {
       return cache.addAll(filesToCache);

@@ -95,14 +95,14 @@ class Model {
         if(this.currentCategory == "allg"){
             let success = await this.sendQstXhr(this.quiznr+this.randomArray[this.currentIndex])
             if (!success || !this.question) {
-                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
+                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verbindung und versuche es erneut");
                 return;
             }
         }
         else{
             let success = await this.getLocalXhr(this.randomArray[this.currentIndex])
             if (!success || !this.question) {
-                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verindung und versuche es erneut");
+                alert("Frage konnte nicht geladen werden.\nÜberprüfe deine Verbindung und versuche es erneut");
                 return;
             }
         }  
