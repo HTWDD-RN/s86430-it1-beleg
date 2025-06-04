@@ -45,6 +45,7 @@ class Model {
         this.answer = "";
         this.isCorrect = false; 
         this.quizLen = 0;
+        this.context = new (window.AudioContext || window.webkitAudioContext)();
 
         const username=  "richter_georg@outlook.com";
         const pw = "secret";
@@ -143,18 +144,66 @@ class Model {
         this.correctAnswers = 0;
     }
 
+    convertNote(note){
+        let notenteile = note.split("/");
+        switch (notenteile[0]){
+            case "c#":
+                notenteile[0]="db";
+                break;
+            case "d#":
+                notenteile[0]="eb";
+                break;
+            case "f#":
+                notenteile[0]="gb";
+                break;
+            case "g#":
+                notenteile[0]="ab";
+                break;
+            case "a#":
+                notenteile[0]="bb";
+                break;
+        }
+        return notenteile[0]+notenteile[1]
+    }
+
+    playSound(buffer) {
+
+        //creating source node
+        console.log("AudioBuffer erfolgreich geladen.");
+        var source = this.context.createBufferSource();
+        //passing in data
+        source.buffer = buffer;
+        //giving the source which sound to play
+        source.connect(this.context.destination);
+        //start playing
+        source.start(0);
+    }
+
+    playMultipleSounds(buffers) {
+    for (let buffer of buffers) {
+        if (!(buffer instanceof AudioBuffer)) {
+            console.warn("Überspringe ungültigen Buffer:", buffer);
+            continue;
+        }
+        const source = this.context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(this.context.destination);
+        source.start(0);
+    }
+}
+
     async getTone(note){
         this.xhr = getXhr();
+        this.xhr.responseType = 'arraybuffer';
 
         return new Promise((resolve) =>{
             this.xhr.onreadystatechange = () => {
                 if (this.xhr.readyState !== 4) return;
 
                 if (this.xhr.status === 200) {
-                    const context = new AudioContext();
-                    context.decodeAudioData(this.xhr.response,
+                    this.context.decodeAudioData(this.xhr.response,
                         (buffer) => {
-                            console.log("AudioBuffer erfolgreich geladen.");
+                            this.playSound(buffer);
                             resolve(buffer);
                         },
                         (error) => {
@@ -166,8 +215,7 @@ class Model {
                     resolve(null);
                 }
             };
-            const tonename = note.replace('/',"");
-            this.xhr.open('GET', 'Data/tone_'+ tonename+'.mp3');
+            this.xhr.open('GET', 'Data/'+note+'.mp3');
             this.xhr.send(null);
         });
     }
@@ -284,8 +332,10 @@ class Presenter {
         const stats = this.m.getProgress();
         View.renderErgebnis(`Du hast ${stats.correct} von ${stats.total} Fragen richtig beantwortet.`);
     }
-
+    
+    
     async getNoten(notenString){
+        
         const {
             Renderer,
             Stave,
@@ -295,37 +345,48 @@ class Presenter {
             Formatter
         } = Vex.Flow;
 
+
         let notes = [];
-        //notenString.forEach(note => {
-            let note = notenString[0];
-            let akkord = note.split(',');
-            
-            let staveNote = new StaveNote({
-                keys: akkord,
-                duration: 'q'
-            });
-           for(let i=0;i<akkord.length;i++)
-            {
-                const teilnote = akkord[i]
-                /*Play Sound to Tone*/
-                /*let audioBuffer = await this.m.getTone(teilnote);
-                if(audioBuffer)
-                    this.m.playSound(audioBuffer);*/
-                View.playSound(teilnote.replace("/",""));
-                
-                if(teilnote.includes('##'))
-                    staveNote.addModifier(new Accidental("##"),i);
-                else if(teilnote.includes('#'))
-                    staveNote.addModifier(new Accidental("#"),i);
-                else if(teilnote.includes('b') && teilnote.length != 1)
-                    staveNote.addModifier(new Accidental("b"),i);
-            }
-            notes.push(staveNote)
-        //});
+        let note = notenString[0];
+        let akkord = note.split(',');
+        
+        let staveNote = new StaveNote({
+            keys: akkord,
+            duration: 'q'
+        });
+
+        let buffers = [];
+        let tones = [];
+        for(let i=0;i<akkord.length;i++)
+        {
+            const teilnote = akkord[i];
+                          
+            if(teilnote.includes('##'))
+                staveNote.addModifier(new Accidental("##"),i);
+            else if(teilnote.includes('#'))
+                staveNote.addModifier(new Accidental("#"),i);
+            else if(teilnote.includes('b') && teilnote.length != 1)
+                staveNote.addModifier(new Accidental("b"),i);
+
+            tones[i] = this.m.convertNote(teilnote);
+
+        }
+
+        //Auf Laden aller Töne warten und abspielen
+        if(akkord.length == 1){
+            let buffer = await this.m.getTone(tones[0]);
+            this.m.playSound(buffer)
+        }
+        else{
+            for(let i=0;i<akkord.length;i++)
+                buffers[i] = await this.m.getTone(tones[i])
+            this.m.playMultipleSounds(buffers)
+        }
+
+        notes.push(staveNote)
         return notes;
     }
     async setTask() {
-        //let frag = await this.m.getTask();
         await this.m.getTask();
             if (this.m.currentIndex < this.m.quizLen && this.m.question) {
                 if(this.m.currentCategory == "mathe"){
@@ -339,12 +400,14 @@ class Presenter {
                     if(fragsplitted[1] != ""){
                         let notenString = fragsplitted[1].split(";");
                         noten = await this.getNoten(notenString);
+                        
                         this.v.renderNoten(noten);
+                        
                     }
                 }
                 else 
                     View.renderText(this.m.question);
-                //let shuffled = [...this.m.options].sort(() => Math.random() - 0.5);
+                
                 let shuffled = Array.from(this.m.options);
                 this.m.randomizeArray(shuffled); 
                 this.m.currentIndex++;
@@ -459,13 +522,6 @@ class View {
         document.getElementById("next").textContent = "Nochmal Fragen lösen";
         View.disableButtons();
 
-    }
-    static playSound(tone){
-
-        var ctx = new AudioContext();
-        Soundfont.instrument(ctx, 'acoustic_grand_piano').then(function (piano) {
-            piano.play(tone);
-        });
     }
 
     static inscribeButtons(i, text, data) {
