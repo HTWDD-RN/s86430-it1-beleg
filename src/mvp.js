@@ -54,31 +54,29 @@ class Model {
     }
 
     setCategory(cat) {
-        //if (this.quizData[cat]) {
-            this.currentCategory = cat;
-            this.currentIndex = 0;
-            this.correctAnswers = 0;
-            this.randomArray = [];
-            if(cat == "allg") {
-                this.quiznr = 1595
-                this.quizLen = 10;
-            }
-            if(cat == "it") {
-                this.quizLen = 10;
-            }
-            if(cat == "mathe"){
-                this.quizLen=10;
-            }
-            if(cat == "noten"){
-                this.quizLen = 10;
-            }
-            if(cat == "akkorde"){
-                this.quizLen = 10;
-            }
-            for(let i=0;i<this.quizLen;i++)
-                this.randomArray.push(i);
-            this.randomizeArray(this.randomArray);
-        //}
+        this.currentCategory = cat;
+        this.currentIndex = 0;
+        this.correctAnswers = 0;
+        this.randomArray = [];
+        if(cat == "allg") {
+            this.quiznr = 1595;
+            this.quizLen = 10;
+        }
+        if(cat == "it") {
+            this.quizLen = 10;
+        }
+        if(cat == "mathe"){
+            this.quizLen=10;
+        }
+        if(cat == "noten"){
+            this.quizLen = 10;
+        }
+        if(cat == "akkorde"){
+            this.quizLen = 10;
+        }
+        for(let i=0;i<this.quizLen;i++)
+            this.randomArray.push(i);
+        this.randomizeArray(this.randomArray);
     }
 
     randomizeArray(zahlen){
@@ -179,19 +177,6 @@ class Model {
         source.start(0);
     }
 
-    playMultipleSounds(buffers) {
-    for (let buffer of buffers) {
-        if (!(buffer instanceof AudioBuffer)) {
-            console.warn("Überspringe ungültigen Buffer:", buffer);
-            continue;
-        }
-        const source = this.context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(this.context.destination);
-        source.start(0);
-    }
-}
-
     async getTone(note){
         this.xhr = getXhr();
         this.xhr.responseType = 'arraybuffer';
@@ -203,7 +188,7 @@ class Model {
                 if (this.xhr.status === 200) {
                     this.context.decodeAudioData(this.xhr.response,
                         (buffer) => {
-                            this.playSound(buffer);
+                            //this.playSound(buffer);
                             resolve(buffer);
                         },
                         (error) => {
@@ -299,7 +284,7 @@ class Model {
                         this.xhrdata= JSON.parse(this.xhr.responseText);
                         this.isCorrect = this.xhrdata.success;
                         console.log("Daten erhalten:", this.xhrdata);
-                        resolve(true);  // Text ist Ergebnis
+                        resolve(true); 
                     }catch(e){
                         console.error("Fehler beim Parsen der Daten", e);
                         resolve(false);
@@ -373,14 +358,10 @@ class Presenter {
         }
 
         //Auf Laden aller Töne warten und abspielen
-        if(akkord.length == 1){
-            let buffer = await this.m.getTone(tones[0]);
-            this.m.playSound(buffer)
-        }
-        else{
-            for(let i=0;i<akkord.length;i++)
-                buffers[i] = await this.m.getTone(tones[i])
-            this.m.playMultipleSounds(buffers)
+        
+        for(let i=0;i<akkord.length;i++){
+            buffers[i] = await this.m.getTone(tones[i])
+            this.m.playSound(buffers[i])
         }
 
         notes.push(staveNote)

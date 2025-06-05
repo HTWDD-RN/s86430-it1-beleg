@@ -68,12 +68,6 @@ const filesToCache = [
   "Data/ab5.mp3",
   "Data/a5.mp3",
   "Data/bb5.mp3"
-    /*
-    "soundfont-player/",
-    "soundfont-player/dist/",
-    "soundfont-player/lib/",
-    "soundfont-player/dist/soundfont-player.min.js",*/
-
     
     ];
 
