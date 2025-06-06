@@ -42,11 +42,41 @@ const filesToCache = [
     "scripts/vexflow/vexflow-min.js",
     "scripts/vexflow/vexflow-min.css",
     "scripts/vexflow/auto-render.min.js",
+<<<<<<< HEAD
     "soundfont-player/",
     "soundfont-player/dist/",
     "soundfont-player/lib/",
     "soundfont-player/dist/soundfont-player.min.js"   //WICHTIG! komma bei letzter Zeile zwingend weglassen, sonst kann array nicht gelesen werden
     /**/
+=======
+
+  "Data/a3.mp3",
+  "Data/bb3.mp3",
+  "Data/b3.mp3",
+  "Data/c4.mp3",
+  "Data/db4.mp3",
+  "Data/d4.mp3",
+  "Data/eb4.mp3",
+  "Data/e4.mp3",
+  "Data/f4.mp3",
+  "Data/gb4.mp3",
+  "Data/g4.mp3",
+  "Data/ab4.mp3",
+  "Data/a4.mp3",
+  "Data/bb4.mp3",
+  "Data/b4.mp3",
+  "Data/c5.mp3",
+  "Data/db5.mp3",
+  "Data/d5.mp3",
+  "Data/eb5.mp3",
+  "Data/e5.mp3",
+  "Data/f5.mp3",
+  "Data/gb5.mp3",
+  "Data/g5.mp3",
+  "Data/ab5.mp3",
+  "Data/a5.mp3",
+  "Data/bb5.mp3"
+>>>>>>> 10a73abdf9b701b33b4aa9177a0b0584fc9189c5
     
     ];
 

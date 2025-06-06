@@ -11,3 +11,4 @@
 11.05. Optimieren der Funktionsweise mit JSON-Schnitstelle 
 12.05. Einbinden von KateX-Bibliothek, Beginn mit VexFlow-Bibliothek
 13.05. Fixen von css-Script, sodass Flex-buttons funktionieren
+04.06. Audio-Dateien von https://github.com/daviddeborin/Piano-Sounds-High-Quality-.git kopiert. Danke an den daviddeborin dafür
