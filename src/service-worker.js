@@ -41,8 +41,10 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2",
     "scripts/vexflow/vexflow-min.js",
     "scripts/vexflow/vexflow-min.css",
-    "scripts/vexflow/auto-render.min.js",
+    "scripts/vexflow/auto-render.min.js"
+];
 
+const notesCache = [
   "Data/a3.mp3",
   "Data/bb3.mp3",
   "Data/b3.mp3",
@@ -70,7 +72,7 @@ const filesToCache = [
   "Data/a5.mp3",
   "Data/bb5.mp3"
     
-    ];
+];
 
 
 
@@ -93,6 +95,7 @@ self.addEventListener('activate', evt =>
 self.addEventListener('install', evt =>         //Service-Worker hängt bei Installing fest -> Problem mit "FilesToCache"-Array (zB falscher Pfad)
   evt.waitUntil(
     caches.open(CURRENT_CACHE).then(cache => {
+      cache.addAll(notesCache);
       return cache.addAll(filesToCache);
     })
   )
