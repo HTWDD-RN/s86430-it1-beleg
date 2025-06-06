@@ -8,7 +8,7 @@ Er wurde getestet auf Firefox, sollte aber auch auf anderen modernen Browsern mi
 
 
 
-Erfüllte Andorderungen:
+Erfüllte Anforderungen:
 
     * Note 4: Programm funktioniert lt. Anforderung mit internen Mathematikaufgaben
     * Note 3: zzgl. funktionsfähige Nutzung des externen Aufgabenservers
