@@ -6,7 +6,7 @@ Quiz-Server: https://idefix.informatik.htw-dresden.de:8888/api/
 Beleg läuft auf www.informatik.htw-dresden.de/~s86430/Lernprogramm
 Er wurde getestet auf Firefox, sollte aber auch auf anderen modernen Browsern mit WebAudio API problemlos funktionieren
 
-
+In mvp.js ist der Hauptteil der Programmierung, mit Fragen holen, überprüfen usw. 
 
 Erfüllte Anforderungen:
 
