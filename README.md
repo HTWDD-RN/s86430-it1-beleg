@@ -21,3 +21,5 @@ Erfüllte Anforderungen:
         - Abspielen von gefragten Piano-Tönen
         
 Piano-Key-Samples wurden von https://github.com/daviddeborin/Piano-Sounds-High-Quality-.git kopiert
+
+Genutze Bibliotheken: Katex und WebAudioAPI
