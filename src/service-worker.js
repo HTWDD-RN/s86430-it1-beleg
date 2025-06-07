@@ -3,18 +3,14 @@ const CACHE_VERSION = 10;
 const CURRENT_CACHE = `Lernprog-Cache-${CACHE_VERSION}`;
 
 const filesToCache = [
-    "Data/",
     "Data/quizdata.json",
     "index.css",
     "index.html",
     "mvp.js",
     "manifest.webmanifest",
     
-    "Images/",
-    "Images/birne.png",
-    
-    
-    "scripts/",
+    "Images/birne.png"
+    /*
     "scripts/katex/katex.min.js",
     "scripts/katex/katex.min.css",
     "scripts/katex/contrib/auto-render.min.js",
@@ -41,7 +37,7 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2",
     "scripts/vexflow/vexflow-min.js",
     "scripts/vexflow/vexflow-min.css",
-    "scripts/vexflow/auto-render.min.js"
+    "scripts/vexflow/auto-render.min.js"*/
 ];
 
 const notesCache = [
